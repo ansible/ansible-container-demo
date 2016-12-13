@@ -47,6 +47,16 @@ gulp.task('html', ['images'], function() {
     .pipe(gulp.dest('dist'))
 })
 
+// templates 
+
+gulp.task('templates', function() {
+  return gulp.src('src/templates/**/*.html')
+    .pipe(plumber({ errorHandler: onError }))
+    .pipe(include({ prefix: '@', basepath: 'dist/images/' }))
+    .pipe(htmlmin({ collapseWhitespace: true, removeComments: true }))
+    .pipe(gulp.dest('dist/templates'))
+})
+
 // sass
 
 const processors = [
@@ -90,7 +100,7 @@ gulp.task('images', function() {
     .pipe(gulp.dest('dist/images'))
 })
 
-// fonts, videos, favicon, lib
+// fonts, videos, favicon, lib 
 
 const others = [
   {
@@ -163,6 +173,7 @@ gulp.task('server', function() {
 
 gulp.task('watch', function() {
   gulp.watch('src/html/**/*.html', ['html', reload])
+  gulp.watch('src/templates/**/*.html', ['templates', reload])
   gulp.watch('src/sass/**/*.scss', ['sass', reload])
   gulp.watch('src/js/**/*.js', ['js', reload])
   gulp.watch('src/images/**/*.{gif,jpg,png,svg}', ['images', reload])
@@ -186,7 +197,7 @@ gulp.task('build', ['clean'], function() {
 
 
   // run the tasks
-  gulp.start('html', 'sass', 'js', 'images', 'fonts', 'videos', 'favicon', 'lib')
+  gulp.start('html', 'templates', 'sass', 'js', 'images', 'fonts', 'videos', 'favicon', 'lib')
 })
 
 gulp.task('default', ['build', 'server', 'watch'])

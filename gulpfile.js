@@ -34,7 +34,9 @@ const onError = function(error) {
 // clean
 
 gulp.task('clean', function() {
-   return del('dist/**')
+   return del(['dist/*.html', 'dist/*.css', 'dist/js/**/*', 'dist/lib/**/*',
+               'dist/maps/**/*', 'dist/templates/**/*', 'dist/html/**/*',
+               'dist/images/**/*'])
 })
 
 // html

@@ -1,37 +1,25 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en-us">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Ansible Container Demo : From development through cloud deployment, using containers to manage applications is easy with Ansible Container">
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Ansible Container Demo</title>
+    <meta charset="UTF-8">
+    <title>Ansible Container Demo by ansible</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
-
   <body>
+    <section class="page-header">
+      <h1 class="project-name">Ansible Container Demo</h1>
+      <h2 class="project-tagline">From development through cloud deployment, using containers to manage applications is easy with Ansible Container</h2>
+      <a href="https://github.com/ansible/ansible-container-demo" class="btn">View on GitHub</a>
+      <a href="https://github.com/ansible/ansible-container-demo/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/ansible/ansible-container-demo/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/ansible/ansible-container-demo">View on GitHub</a>
-
-          <h1 id="project_title">Ansible Container Demo</h1>
-          <h2 id="project_tagline">From development through cloud deployment, using containers to manage applications is easy with Ansible Container</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/ansible/ansible-container-demo/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/ansible/ansible-container-demo/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <p>The demo will take you through the complete lifecycle of a simple social media web app called <em>Not Google Plus</em>. The application itself comes from a <a href="https://thinkster.io/django-angularjs-tutorial">tutorial</a>, but not to worry, we won't be working through the tutorial. Instead, we'll focus on the mechanics of building, testing and deploying completed application.  </p>
+    <section class="main-content">
+      <p>The demo will take you through the complete lifecycle of a simple social media web app called <em>Not Google Plus</em>. The application itself comes from a <a href="https://thinkster.io/django-angularjs-tutorial">tutorial</a>, but not to worry, we won't be working through the tutorial. Instead, we'll focus on the mechanics of building, testing and deploying completed application.  </p>
 
 <h2>
 <a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Requirements</h2>
@@ -39,6 +27,8 @@
 <p>Before continuing, you'll need a couple of things:</p>
 
 <ul>
+<li>A Linux or OSX environment<br>
+</li>
 <li>Ansible Container installed from source. See our <a href="http://docs.ansible.com/ansible-container/installation.html#running-from-source">Running from source guide</a> for assistance.<br>
 </li>
 <li>Docker Engine or Docker for Mac. See <a href="https://docs.docker.com/engine/installation/">Docker Installation</a> for assistance.</li>
@@ -50,9 +40,11 @@
 <h2>
 <a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started</h2>
 
-<p>Ansible roles can be used to initialize a new project or add services to existing projects. Roles are found on the Ansible Galaxy web site, and there are two role types that we can use with Ansible Container. The <em>Container App</em> role contains a fully functioning app, and can be used to initialize an empty project. A <em>Container Enabled</em> role contains a Docker Compose service definition, a playbook, and any files needed to build the service. This type of role is used to add a service to a container project.</p>
+<p>Ansible roles can be used to initialize a new project or add services to existing projects. Roles are found on the <a href="https://galaxy.ansible.com">Ansible Galaxy</a> web site, and there are two role types we can use with Ansible Container. The <em>container app</em> role contains a fully functioning app, and can be used to initialize an empty project. A <em>container enabled</em> role will add a service to an existing project, and it contains a Docker Compose service definition, a playbook, and any files needed to supporting building the service's container image.</p>
 
-<p>We'll start by creating an empty project directory, and initializing it with our demo django-gulp-nginx container app. Run the following commands to create the new project:</p>
+<p>We'll start by creating an empty project directory, and initializing it with the <a href="https://galaxy.ansible.com/ansible/django-gulp-nginx">ansible.django-gulp-nginx</a> role. It's a <em>container app</em> role, providing us with a fully functioning Django framework. And because we're able to start with this role, the containerization and Django setup work is already done. All that's left is to add the source code for our new social media site, and we'll have a completed app. </p>
+
+<p>Create the project folder, and initialize it by running the following commands from a terminal session:</p>
 
 <pre><code># Create an empty directory called 'demo'
 $ mkdir demo
@@ -77,9 +69,7 @@ $ ansible-container build
 
 <p><img src="https://github.com/chouseknecht/django-gulp-nginx/blob/images/images/build_01.png" alt="Building the images"></p>
 
-<p>The build process launches a container for each service along with a build container. For each service container, the base image is the 
-image specified in <code>container.yml</code>. The build container runs the <code>main.yml</code> playbook, and executes tasks on each of the containers. You'll 
-see output from the playbook run in your terminal window as it progresses through the tasks. When the playbook completes, each image will
+<p>The build process launches a container for each service along with a build container. For each service container, the base image is the image specified in <code>container.yml</code>. The build container runs the <code>main.yml</code> playbook, and executes tasks on each of the containers. You'll see output from the playbook run in your terminal window as it progresses through the tasks. When the playbook completes, each image will
 be <code>committed</code>, creating a new set of base images.</p>
 
 <p>When execution stops, use the <code>docker images</code> command to view the new images:</p>
@@ -307,18 +297,15 @@ $ ansible-playbook -i inventory shipit-openshift.yml
 <p>Watch the following video to see the full deployment:  </p>
 
 <p><a href="https://youtu.be/9i6iGMLyr44"><img src="https://github.com/chouseknecht/django-gulp-nginx/blob/images/images/deploy.png" alt="Deploy the app"></a></p>
-      </section>
-    </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Ansible Container Demo maintained by <a href="https://github.com/ansible">ansible</a></p>
-        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/ansible/ansible-container-demo">Ansible Container Demo</a> is maintained by <a href="https://github.com/ansible">ansible</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
-    </div>
 
-    
+    </section>
 
+  
   </body>
 </html>

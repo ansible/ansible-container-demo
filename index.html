@@ -66,7 +66,7 @@ $ ansible-container init ansible.django-gulp-nginx
 $ ansible-container build
 </code></pre>
 
-<p><img src="https://github.com/ansible/ansible-container-demo/blob/gh-pages/images/build_01.png" alt="Building the images"></p>
+<p><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/build_01.png" alt="Building the images"></p>
 
 <p>The build process launches a container for each service along with a build container. For each service container, the base image is the image specified in <code>container.yml</code>. The build container runs the <code>main.yml</code> playbook, and executes tasks on each of the containers. You'll see output from the playbook run in your terminal window as it progresses through the tasks. When the playbook completes, each image will
 be <code>committed</code>, creating a new set of base images.</p>
@@ -153,7 +153,7 @@ $ ansible-container run
 
 <p>Click the image below to watch the video:</p>
 
-<p><a href="https://youtu.be/XVOIVhcYd8M"><img src="https://github.com/ansible/ansible-container-demo/blob/gh-pages/images/demo.png" alt="Site Tour"></a></p>
+<p><a href="https://youtu.be/XVOIVhcYd8M"><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/demo.png" alt="Site Tour"></a></p>
 
 <h3>
 <a id="stopping-the-containers" class="anchor" href="#stopping-the-containers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Stopping the containers</h3>
@@ -201,7 +201,7 @@ $ ansible-container run --production
 
 <p>The following video shows the application starting with the <code>--production</code> option. Click the image below to watch the video:</p>
 
-<p><a href="https://youtu.be/ATpYJhG1RV0"><img src="https://github.com/ansible/ansible-container-demo/blob/gh-pages/images/production.png" alt="Testing"></a></p>
+<p><a href="https://youtu.be/ATpYJhG1RV0"><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/production.png" alt="Testing"></a></p>
 
 <h2>
 <a id="deploy-the-application" class="anchor" href="#deploy-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Deploy the application</h2>
@@ -215,7 +215,7 @@ $ ansible-container run --production
 
 <p>You'll find instructions in our <a href="http://docs.ansible.com/ansible-container/configure_openshift.html">Install and Configure OpenShift guide</a> to help you create an instance. One available installation method is the Ansible role <a href="https://galaxy.ansible.com/chouseknecht/cluster-up-role">chouseknecht.cluster-up-role</a>, which is demonstrated in the following video:</p>
 
-<p><a href="https://youtu.be/iY4bkHDaxCc"><img src="https://github.com/ansible/ansible-container-demo/blob/gh-pages/images/cluster.png" alt="Creating an OpenShift instance"></a></p>
+<p><a href="https://youtu.be/iY4bkHDaxCc"><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images" alt="Creating an OpenShift instance"></a></p>
 
 <p>To use the role, you'll need Ansible installed. Also, note in the video that the playbook is copied from the installed role's file structure. You'll find the playbook, <em>cluster-up.yml</em>, in the <em>files</em> subfolder.</p>
 
@@ -258,7 +258,7 @@ $ ansible-container push --push-to https://local.openshift/demo --username devel
 
 <p>The following video shows the project's images being pushed to the local registry:</p>
 
-<p><a href="https://youtu.be/KklXsFKd8gQ"><img src="https://github.com/ansible/ansible-container-demo/blob/gh-pages/images/push.png" alt="Push images"></a></p>
+<p><a href="https://youtu.be/KklXsFKd8gQ"><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/push.png" alt="Push images"></a></p>
 
 <h3>
 <a id="generate-the-deployment-artifacts" class="anchor" href="#generate-the-deployment-artifacts" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Generate the deployment artifacts</h3>
@@ -271,7 +271,7 @@ $ ansible-container shipit openshift --pull-from https://local.openshift/demo
 
 <p>Running the above creates, a playbook, <em>shipit-openshift.yml</em>, in the <em>ansible</em> directory, and a role, <em>demo-openshift</em>, in the <em>ansible/roles</em> directory as demonstrated in the following video:</p>
 
-<p><a href="https://youtu.be/4a8WKO5Kjlo"><img src="https://github.com/ansible/ansible-container-demo/blob/gh-pages/images/shipit.png" alt="Run shipit"></a></p>
+<p><a href="https://youtu.be/4a8WKO5Kjlo"><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/shipit.png" alt="Run shipit"></a></p>
 
 <h3>
 <a id="deploy" class="anchor" href="#deploy" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Deploy!</h3>
@@ -295,7 +295,7 @@ $ ansible-playbook -i inventory shipit-openshift.yml
 
 <p>Watch the following video to see the full deployment:  </p>
 
-<p><a href="https://youtu.be/9i6iGMLyr44"><img src="https://github.com/ansible/ansible-container-demo/blob/gh-pages/images/deploy.png" alt="Deploy the app"></a></p>
+<p><a href="https://youtu.be/9i6iGMLyr44"><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/deploy.png" alt="Deploy the app"></a></p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/ansible/ansible-container-demo">Ansible Container Demo</a> is maintained by <a href="https://github.com/ansible">ansible</a>.</span>

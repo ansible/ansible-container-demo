@@ -121,7 +121,7 @@ $ ansible-container run
 
 <p>In development <em>dev_overrides</em> takes precedence, so the command <code>/usr/bin/dumb-init /usr/bin/gulp</code> will be executed, ports <code>8080</code> and <code>3001</code> will be exposed, and the container will be linked to the <em>django</em> service container.</p>
 
-<p>If you were to run the <em>gulp</em> service in production, <em>dev_overrides</em> would be ignored completely. In production the <code>/bin/false</code> command would be executed, causing the container to immediately stop. No ports would be exposed, and the container would not be linked to the <em>djang</em> service.</p>
+<p>If you were to run the <em>gulp</em> service in production, <em>dev_overrides</em> would be ignored completely. In production the <code>/bin/false</code> command would be executed, causing the container to immediately stop. No ports would be exposed, and the container would not be linked to the <em>django</em> service.</p>
 
 <p>Since the frontend tools provided by the <em>gulp</em> service are only needed during development and not during production, we use <em>dev_overrides</em> to manage when the container runs.</p>
 
@@ -143,7 +143,35 @@ $ ansible-container run
         runAsUser: 1000
 </code></pre>
 
-<p>In development the nginx service runs the <code>/bin/false</code> command, and immediately exits. But in production it starts the <code>nginx</code> process, and takes the place of the <em>gulp</em> service as the application's web server.</p>
+<p>In development the <em>nginx</em> service runs the <code>/bin/false</code> command, and immediately exits. But in production, it starts the <em>nginx</em> process, and takes the place of the <em>gulp</em> service as the application's web server.</p>
+
+<h3>
+<a id="develop-the-application" class="anchor" href="#develop-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Develop the application</h3>
+
+<p>You now have the <em>ansible.django-gulp-nginx</em> framework running, and if you open a browser, and go to <a href="http://localhost:8080">http://localhost:8080</a>, you will see the default "Hello World!" page.</p>
+
+<p>Let's make some changes by adding the source code for the <em>Not Google Plus</em> site. Start by opening a new terminal window. Then download the source, and drop it in place by running the following commands:</p>
+
+<pre><code># Set the working directory to your *demo* folder
+$ cd demo
+
+# Stop the containers running in your first terminal session
+$ ansible-container setop
+
+# Download and expand the source archive
+$ curl -L https://github.com/ansible/ansible-container-demo/archive/v0.1.0.tar.gz | tar -xzv
+
+# Copy the frontend files
+$ cp -R ansible-container-demo-0.1.0/src/* src
+
+# Copy the new Django files
+$ cp -R ansible-container-demo-0.1.0/project/* project
+
+# Restart the application
+$ ansible-container run
+</code></pre>
+
+<p>The <em>Not Google Plus</em> application is now running. If you take a look at your browser, and once again go to <a href="http://localhost:8080">http://localhost:8080</a>, you will no longer see "Hello World!"</p>
 
 <h3>
 <a id="tour-the-site" class="anchor" href="#tour-the-site" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tour the site</h3>
@@ -157,14 +185,16 @@ $ ansible-container run
 <h3>
 <a id="stopping-the-containers" class="anchor" href="#stopping-the-containers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Stopping the containers</h3>
 
-<p>Once you're finished, you can press <code>ctrl-c</code> to kill the containers. This will signal Docker to kill the processes running inside the containers, and shut the containers down. This works when the containers are running in the foreground, streaming output to your terminal window.</p>
+<p>Once you're finished, you can press <code>control-c</code> or <code>ctrl-c</code> to kill the containers. This will signal Docker to kill the processes running inside the containers, and shut the containers down. This works when the containers are running in the foreground, streaming output to your terminal window.</p>
 
-<p>You can also run <code>ansible-container stop</code>. For containers running in the foreground, open a second terminal window, set the working directory to your <em>demo</em> project, and run the command. It will terminate all containers associated with the project, regardless wether they're running in the foreground or in the backgound.</p>
+<p>You can also run <code>ansible-container stop</code>, as you did above, by opening a second terminal window, setting the working directory to your <em>demo</em> folder, and running the command. It will terminate all containers associated with the project, regardless of wether they're running in the foreground or in the background.</p>
 
 <h2>
 <a id="testing-the-application" class="anchor" href="#testing-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing the application</h2>
 
-<p>If you make code changes, and you want to test, you'll begin by building a fresh set of images that contain your code changes. During the build process the latest code gets added to the nginx image. So if you actually modified some code, go ahead and run the <code>build</code> command as follows, otherwise you can skip this step:</p>
+<p>Now that you made changes to the application by adding the code for <em>Not Google Plus</em>, you'll need to build a new set of image that contain the changes. During the build process the latest code gets added to the <em>nginx</em> and <em>django</em> images.</p>
+
+<p>Start the build process by running the following command:</p>
 
 <pre><code># Start the build process
 $ ansible-container build
@@ -187,12 +217,14 @@ demo-nginx                          20161205170642      5becc50f69a9        2 ho
 demo-gulp                           20161205170642      0644893c80d7        2 hours ago         508 MB
 </code></pre>
 
-<p>You now have a newer set of images with your code changes baked into the nginx image. Now when you start the application in production mode or deploy it, your changes will be available.</p>
+<p>You now have a newer set of images with the updated code baked into the <em>nginx</em> and <em>django</em> images. Now when you deploy the application to production, you'll be deploying the <em>Not Google Plus</em> app.</p>
 
 <h3>
 <a id="start-in-production-mode" class="anchor" href="#start-in-production-mode" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Start in production mode</h3>
 
-<p>For testing you want to launch the application in <em>production mode</em>, so that it runs exactly the same as it does when deployed to the cloud. As we pointed out earlier, when run in production the <em>dev_overrides</em> settings are ignored, which means we'll see the gulp container stop and the nginx container start and run as our web server. To start the application in production mode, run the following command:</p>
+<p>For testing you want to launch the application in <em>production mode</em>, so that it runs exactly the same as it will when deployed to the cloud. As we pointed out earlier, when run in production the <em>dev_overrides</em> settings are ignored, which means we'll see the <em>gulp</em> service stop and the <em>nginx</em> container start and run as our web server.</p>
+
+<p>To start the application in production mode, run the following command:</p>
 
 <pre><code># Start the appliction in production mode
 $ ansible-container run --production

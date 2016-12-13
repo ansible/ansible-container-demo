@@ -55,12 +55,12 @@ $ cd demo
 $ ansible-container init ansible.django-gulp-nginx
 </code></pre>
 
-<p>You now have a copy of the project in a directory called <em>demo</em>. Inside <em>demo/ansible</em> you'll find a <code>container.yml</code> file describing in <a href="http://docs.ansible.com/ansible-container/container_yml/reference.html">Compose</a> the services that make up the application, and an Ansible playbook called <code>main.yml</code> containing a set of plays for building the application images. </p>
+<p>You now have a copy the ansible.django-gulp-nginx Django framework project you your <em>demo</em> directory. Inside <em>demo/ansible</em> you'll find a <code>container.yml</code> file describing in <a href="http://docs.ansible.com/ansible-container/container_yml/reference.html">Compose</a> the services that make up the application, and an Ansible playbook called <code>main.yml</code> containing a set of plays for building the application images.</p>
 
 <h3>
 <a id="build-the-images" class="anchor" href="#build-the-images" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Build the images</h3>
 
-<p>To run the application, you'll first need to build the images, and you can start the build by running the following command:</p>
+<p>To start application development, we'll first need to build the images. Start the build process by running the following command:</p>
 
 <pre><code># Start the image build process
 $ ansible-container build
@@ -88,9 +88,9 @@ demo-gulp                           latest              0644893c80d7        Abou
 <h3>
 <a id="run-the-application" class="anchor" href="#run-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Run the application</h3>
 
-<p>Now that you have the application images built in your environent, you can launch the application and log into <em>Not Google Plus</em>. Run the following command to start the application:</p>
+<p>Now that you have the application images built in your environment, you can start application by running the following:</p>
 
-<pre><code># Launch the demo
+<pre><code># Start the application
 $ ansible-container run
 </code></pre>
 
@@ -119,13 +119,13 @@ $ ansible-container run
         state: absent
 </code></pre>
 
-<p>In development <em>dev_overrides</em> takes precedence, so the command ``/usr/bin/dumb-init /usr/bin/gulp* will be executed, ports 8080 and 3001 will be exposed, and the container will be linked to the <em>django</em> service container.</p>
+<p>In development <em>dev_overrides</em> takes precedence, so the command <code>/usr/bin/dumb-init /usr/bin/gulp</code> will be executed, ports <code>8080</code> and <code>3001</code> will be exposed, and the container will be linked to the <em>django</em> service container.</p>
 
-<p>If you were to tun the <em>gulp</em> service in production, <em>dev_overrides</em> would be ignored completely. In production the <code>/bin/false</code> command will be executed, causing the container to immediately stop. No ports would be exposed, and the container would not be linked to the django container.</p>
+<p>If you were to run the <em>gulp</em> service in production, <em>dev_overrides</em> would be ignored completely. In production the <code>/bin/false</code> command would be executed, causing the container to immediately stop. No ports would be exposed, and the container would not be linked to the <em>djang</em> service.</p>
 
-<p>Since the frontend tools gulp and browsersync are only needed during development and not during production, we use <em>dev_overrides</em> to manage when the container executes.</p>
+<p>Since the frontend tools provided by the <em>gulp</em> service are only needed during development and not during production, we use <em>dev_overrides</em> to manage when the container runs.</p>
 
-<p>The same is true for the nginx service. Take a look at the service definition in <code>container.yml</code>, and you'll notice it's configured opposite of the gulp service:</p>
+<p>The same is true for the <em>nginx</em> service. Take a look at the service definition in <code>container.yml</code>, and you'll notice it's configured opposite of the <em>gulp</em> service:</p>
 
 <pre><code>  nginx:
     image: centos:7
@@ -143,8 +143,7 @@ $ ansible-container run
         runAsUser: 1000
 </code></pre>
 
-<p>In development the nginx service runs the <code>/bin/false</code> command, and immediately exits. But in production it starts the 
-<code>nginx</code> process, and takes the place of the gulp service as the application's web server.</p>
+<p>In development the nginx service runs the <code>/bin/false</code> command, and immediately exits. But in production it starts the <code>nginx</code> process, and takes the place of the <em>gulp</em> service as the application's web server.</p>
 
 <h3>
 <a id="tour-the-site" class="anchor" href="#tour-the-site" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tour the site</h3>

@@ -1,0 +1,14 @@
+Django>=1.8,<1.9
+psycopg2==2.6.1
+gunicorn==19.4.5
+dj-database-url==0.4.1
+djangorestframework
+markdown 
+django-filter
+dj-static==0.0.6
+django-appconf==0.6
+django-compressor==1.4
+drf-nested-routers==0.9.0
+six==1.8.0
+static3==0.5.1
+wsgiref==0.1.2

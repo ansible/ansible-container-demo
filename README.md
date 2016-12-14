@@ -226,7 +226,7 @@ To create an OpenShift instance you'll install the ``oc`` command line tool, and
 
 You'll find instructions in our [Install and Configure OpenShift guide](http://docs.ansible.com/ansible-container/configure_openshift.html) to help you create an instance. One available installation method is the Ansible role [chouseknecht.cluster-up-role](https://galaxy.ansible.com/chouseknecht/cluster-up-role), which is demonstrated in the following video:
 
-[![Creating an OpenShift instance](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images)](https://youtu.be/iY4bkHDaxCc)
+[![Creating an OpenShift instance](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/cluster.png)](https://youtu.be/iY4bkHDaxCc)
 
 To use the role, you'll need Ansible installed. Also, note in the video that the playbook is copied from the installed role's file structure. You'll find the playbook, *cluster-up.yml*, in the *files* subfolder.
 

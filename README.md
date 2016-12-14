@@ -1,4 +1,6 @@
-This page will take you through the complete lifecycle of a simple social media app called *Not Google Plus*. The application itself comes from a [tutorial](https://thinkster.io/django-angularjs-tutorial). But not to worry, this isn't a programming tutorial. Instead, we'll focus on the mechanics of building, testing and deploying the completed application.  
+# Ansible Container Demo
+
+Ansible Container can manage the lifecycle of an application from development through cloud deployment. In this demo we'll create, test and deploy a new social media app called *Not Google Plus*. The application itself comes from a [tutorial](https://thinkster.io/django-angularjs-tutorial), but not to worry, this isn't a programming tutorial. Instead, we'll focus on how to use Ansible Container through each phase.  
 
 ## Requirements
 
@@ -35,7 +37,7 @@ The following video shows the project init steps:
 
 You now have a copy the *ansible.django-gulp-nginx* framework project in your *demo* directory. Inside *demo/ansible* you'll find a `container.yml` file describing in [Compose](http://docs.ansible.com/ansible-container/container_yml/reference.html) the services that make up the application, and an Ansible playbook called `main.yml` containing a set of plays for building the application images.
 
-### Build the images
+### Build the Images
 
 To start application development, we'll first need to build the images. Start the build process by running the following command:
 
@@ -63,7 +65,7 @@ demo-gulp                           20161205170642      0644893c80d7        Abou
 demo-gulp                           latest              0644893c80d7        About an hour ago   508 MB
 ```
 
-### Run the application
+### Run the Application
 
 Now that you have the application images built in your environment, start the application by running the following:
 
@@ -73,7 +75,7 @@ $ ansible-container run
 ```
 The containers are running in the foreground, with the output from each streaming in your terminal window. Open a browser, and go to [http://localhost:8080](http://localhost:8080), where you'll see the default "Hello World!" page.
 
-### Development vs production
+### Development vs Production
 
 The containers are currently running in *development*, which means that for each service the *dev_overrides* directive takes precedence. For example, take a look at the *gulp* service definition found in `container.yml`:
 
@@ -128,7 +130,7 @@ The same is true for the *nginx* service. Take a look at the service definition 
 
 In development the *nginx* service runs the `/bin/false` command, and immediately exits. But in production, it starts the *nginx* process, and takes the place of the *gulp* service as the application's web server.
 
-### Developing the application
+### Developing the Application
 
 Let's make some updates and create the *Not Google Plus* app, and then we'll see how to test and deploy it. To make the changes, start by opening a second terminal window. In the second window run the following commands to download the source, and update the project:
 
@@ -154,7 +156,7 @@ $ ansible-container run
 
 The *Not Google Plus* application is now running. If you take a look at your browser, and once again go to [http://localhost:8080](http://localhost:8080), you'll see that the "Hello World!" page has been replaced by our social media site.
 
-### Tour the site 
+### Tour the Site 
 
 Let's check out *Not Google Plus*. Watch the video below, and follow along on your local site to register, log in, and create posts. Your site will be reachable at [http://localhost:8080](http://localhost:8080), and you can browse the API directly at [http://localhost:8080/api/v1/](http://localhost:8080/api/v1/).
 
@@ -162,13 +164,13 @@ Click the image below to watch a video tour of the site:
 
 [![Site Tour](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/demo.png)](https://youtu.be/XVOIVhcYd8M)
 
-### Stopping the containers
+### Stopping the Containers
 
 Once you're finished, you can press `control-c` or `ctrl-c` to kill the containers. This will signal Docker to kill the processes running inside the containers, and shut the containers down. This works when the containers are running in the foreground, streaming output to your terminal window.
 
 You can also run `ansible-container stop`, as you did earlier, by opening a second terminal window, setting the working directory to your *demo* folder, and running the command. The `stop` command will terminate all containers associated with the project, regardless of whether they're running in the foreground or in the background.
 
-## Testing the application
+## Testing
 
 Now that you made changes to the application by adding the code for *Not Google Plus*, you'll need to build a new set of images containing the updated source code before testing and deploying.
 
@@ -198,8 +200,6 @@ demo-gulp                           20161205170642      0644893c80d7        2 ho
 ```
 
 You now have a newer set of images with the updated code baked into the *nginx* and *django* images, and when you deploy the application to production, you'll be deploying the *Not Google Plus* app.
-
-### Start in production mode 
 
 For testing, we want the application in *production mode*, so that it runs exactly the same as it will when deployed to the cloud. As we pointed out earlier, when run in production the *dev_overrides* settings are ignored, which means we'll see the *gulp* service stop and the *nginx* service start and run as our web server.
 

@@ -39,7 +39,7 @@
 <h2>
 <a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started</h2>
 
-<p>Ansible roles can be used to initialize a new project or add services to existing projects. Roles are found on the <a href="https://galaxy.ansible.com">Ansible Galaxy</a> web site, and there are two role types we can use with Ansible Container. The <em>container app</em> role contains a fully functioning app, and can be used to initialize an empty project. A <em>container enabled</em> role will add a service to an existing project, and it contains a Docker Compose service definition, a playbook, and any files needed to build the container image.</p>
+<p>Ansible roles can be used to initialize a new project or add services to existing projects. Roles are found on the <a href="https://galaxy.ansible.com">Ansible Galaxy</a> web site, and there are two role types we can use with Ansible Container. The <em>container app</em> role contains a fully functioning app, and can be used to initialize an empty project. A <em>container enabled</em> role will add a service to an existing project, and it contains a Docker Compose service definition, a <a href="http://docs.ansible.com/ansible/playbooks.html">playbook</a>, and any files needed to build the container image.</p>
 
 <p>We'll start by creating an empty project directory, and initializing it with the <a href="https://galaxy.ansible.com/ansible/django-gulp-nginx">ansible.django-gulp-nginx</a> role. It's a <em>container app</em> role, providing a fully functioning Django framework. And because we're able to start with this role, the containerization and Django setup work is already done. All that's left is to add the source code for our new social media site, and we'll have a completed app. </p>
 
@@ -55,7 +55,7 @@ $ cd demo
 $ ansible-container init ansible.django-gulp-nginx
 </code></pre>
 
-<p>You now have a copy the ansible.django-gulp-nginx Django framework project you your <em>demo</em> directory. Inside <em>demo/ansible</em> you'll find a <code>container.yml</code> file describing in <a href="http://docs.ansible.com/ansible-container/container_yml/reference.html">Compose</a> the services that make up the application, and an Ansible playbook called <code>main.yml</code> containing a set of plays for building the application images.</p>
+<p>You now have a copy the <em>ansible.django-gulp-nginx</em> framework project in your <em>demo</em> directory. Inside <em>demo/ansible</em> you'll find a <code>container.yml</code> file describing in <a href="http://docs.ansible.com/ansible-container/container_yml/reference.html">Compose</a> the services that make up the application, and an Ansible playbook called <code>main.yml</code> containing a set of plays for building the application images.</p>
 
 <h3>
 <a id="build-the-images" class="anchor" href="#build-the-images" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Build the images</h3>

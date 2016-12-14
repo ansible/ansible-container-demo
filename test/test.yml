@@ -1,0 +1,26 @@
+- name: Test that we can access the gulp web server
+  hosts: localhost
+  gather_facts: no
+  connection: local
+  vars: 
+    host: "0.0.0.0"
+  tasks:
+    - name: Pause
+      pause: seconds=5
+ 
+    - name: Access the admin page
+      get_url: 
+        url: "http://{{ host }}:8080/admin"
+        dest: ./home_page.html
+       
+    - name: Grep the output file for expected content
+      command: grep "Django administration" ./home_page.html     
+      register: output
+
+    - name: Assert expected output found
+      assert:
+        that:
+          - "'Django administration' in output.stdout"
+
+    - name: Remove html file
+      file: path=./home_page.html state=absent

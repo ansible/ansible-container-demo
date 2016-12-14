@@ -1,0 +1,36 @@
+language: python
+dist: trusty
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - sudo apt-add-repository 'deb http://archive.ubuntu.com/ubuntu trusty-backports universe'
+  - sudo apt-get update -qq
+
+install:
+  - pip install ansible
+  - pip install -e git+https://github.com/ansible/ansible-container.git@develop#egg=ansible_container
+
+script:
+  - docker version
+  - docker-compose version
+  - docker info
+  - cd test
+  - mkdir demo
+  - cd demo  
+  - ansible-container init ansible.django-gulp-nginx
+  - cp -R ../../src/* src
+  - cp -R ../../project/* project
+  - ansible-container build
+  - ansible-container run -d
+  - docker ps -a
+  - docker images
+  - cd .. 
+  - ansible-playbook -i inventory test.yml
+  - cd demo 
+  - ansible-container stop -f
+
+notifications:
+  email: false 

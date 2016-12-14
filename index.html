@@ -43,7 +43,7 @@
 
 <p>We'll start by creating an empty project directory, and initializing it with the <a href="https://galaxy.ansible.com/ansible/django-gulp-nginx">ansible.django-gulp-nginx</a> role. It's a <em>container app</em> role, providing a fully functioning Django framework. And because we're able to start with this role, the containerization and Django setup work is already done. All that's left is to add the source code for our new social media site, and we'll have a completed app. </p>
 
-<p>Create the project folder, and initialize it by running the following commands from a terminal session:</p>
+<p>Create the project folder, and initialize it by opening a terminal session and running the following commands:</p>
 
 <pre><code># Create an empty directory called 'demo'
 $ mkdir demo
@@ -72,10 +72,9 @@ $ ansible-container build
 
 <p><a href="https://youtu.be/xnzrNWHzFWY"><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/build.png" alt="Build Images"></a></p>
 
-<p>The build process launches a container for each service along with a build container. For each service container, the base image is the image specified in <code>container.yml</code>. The build container runs the <code>main.yml</code> playbook, and executes tasks on each of the containers. You'll see output from the playbook run in your terminal window as it progresses through the tasks. When the playbook completes, each image will
-be <code>committed</code>, creating a new set of base images.</p>
+<p>The build process launches a container for each service defined in <code>container.yml</code> along with a build container. For each service container, the base image is the image specified in <code>container.yml</code>. The build container runs the <code>main.yml</code> playbook, executing tasks on each of the service containers. When the playbook run completes, each image will be <code>committed</code>, creating a new set of images.</p>
 
-<p>When execution stops, use the <code>docker images</code> command to view the new images:</p>
+<p>When the build completes, use the <code>docker images</code> command to view the new images:</p>
 
 <pre><code># View the images
 $ docker images
@@ -92,13 +91,15 @@ demo-gulp                           latest              0644893c80d7        Abou
 <h3>
 <a id="run-the-application" class="anchor" href="#run-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Run the application</h3>
 
-<p>Now that you have the application images built in your environment, you can start application by running the following:</p>
+<p>Now that you have the application images built in your environment, you can start the application by running the following:</p>
 
 <pre><code># Start the application
 $ ansible-container run
 </code></pre>
 
-<p>You should now see the output from each container streaming in your terminal window. The containers are running in the foreground, and they are running in <em>development mode</em>, which means that for each service the <em>dev_overrides</em> directive is being included in the configuration. For example, take a look at the <em>gulp</em> service definition found in <code>container.yml</code>:</p>
+<p>You should now see the output from each container streaming in your terminal window. The containers are running in the foreground, in <em>development mode</em>, which means that for each service the <em>dev_overrides</em> directive takes precedence.</p>
+
+<p>For example, take a look at the <em>gulp</em> service definition found in <code>container.yml</code>:</p>
 
 <pre><code>  gulp:
     image: centos:7
@@ -152,9 +153,9 @@ $ ansible-container run
 <h3>
 <a id="develop-the-application" class="anchor" href="#develop-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Develop the application</h3>
 
-<p>You now have the <em>ansible.django-gulp-nginx</em> framework running, and if you open a browser, and go to <a href="http://localhost:8080">http://localhost:8080</a>, you will see the default "Hello World!" page.</p>
+<p>You now have the <em>ansible.django-gulp-nginx</em> framework running, and if you open a browser, and go to <a href="http://localhost:8080">http://localhost:8080</a>, you'll see the default "Hello World!" page.</p>
 
-<p>Let's make some changes by adding the source code for the <em>Not Google Plus</em> site. Start by opening a new terminal window, then download the source, and drop it in place by running the following:</p>
+<p>Let's make some changes by adding the source code for the <em>Not Google Plus</em> site. Start by opening a second terminal session, and then run the following commands to download the source and drop it into the project:</p>
 
 <pre><code># Set the working directory to your *demo* folder
 $ cd demo
@@ -168,21 +169,21 @@ $ curl -L https://github.com/ansible/ansible-container-demo/archive/v0.1.0.tar.g
 # Copy the frontend files
 $ cp -R ansible-container-demo-0.1.0/src/* src
 
-# Copy the new Django files
+# Copy the Django files
 $ cp -R ansible-container-demo-0.1.0/project/* project
 
 # Restart the application
 $ ansible-container run
 </code></pre>
 
-<p>The <em>Not Google Plus</em> application is now running. If you take a look at your browser, and once again go to <a href="http://localhost:8080">http://localhost:8080</a>, you will no longer see "Hello World!"</p>
+<p>The <em>Not Google Plus</em> application is now running. If you take a look at your browser, and once again go to <a href="http://localhost:8080">http://localhost:8080</a>, you'll see that the "Hello World!" page has been replaced.</p>
 
 <h3>
 <a id="tour-the-site" class="anchor" href="#tour-the-site" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tour the site</h3>
 
 <p>Let's check out <em>Not Google Plus</em>. Watch the video below, and follow along on your local site to register, log in, and create posts. Your site will be reachable at <a href="http://localhost:8080">http://localhost:8080</a>, and you can browse the API directly at <a href="http://localhost:8080/api/v1/">http://localhost:8080/api/v1/</a>.</p>
 
-<p>Click the image below to watch the video:</p>
+<p>Click the image below to watch a video tour of the site:</p>
 
 <p><a href="https://youtu.be/XVOIVhcYd8M"><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/demo.png" alt="Site Tour"></a></p>
 
@@ -196,7 +197,7 @@ $ ansible-container run
 <h2>
 <a id="testing-the-application" class="anchor" href="#testing-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing the application</h2>
 
-<p>Now that you made changes to the application by adding the code for <em>Not Google Plus</em>, you'll need to build a new set of image that contain the update source code. During the build process the latest code gets added to the <em>nginx</em> and <em>django</em> images, and you'll need the updated images to test and deploy.</p>
+<p>Now that you made changes to the application by adding the code for <em>Not Google Plus</em>, you'll need to build a new set of images containing the updated source code before testing and deploying.</p>
 
 <p>Start the build process by running the following command:</p>
 
@@ -204,7 +205,7 @@ $ ansible-container run
 $ ansible-container build
 </code></pre>
 
-<p>Once the build process completes, you'll have a new set of images, which you can view using <code>docker images</code></p>
+<p>Once the build process completes, take a look at your local images using <code>docker images</code>:</p>
 
 <pre><code># View the images once again
 $ docker images
@@ -226,22 +227,24 @@ demo-gulp                           20161205170642      0644893c80d7        2 ho
 <h3>
 <a id="start-in-production-mode" class="anchor" href="#start-in-production-mode" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Start in production mode</h3>
 
-<p>For testing you want to launch the application in <em>production mode</em>, so that it runs exactly the same as it will when deployed to the cloud. As we pointed out earlier, when run in production the <em>dev_overrides</em> settings are ignored, which means we'll see the <em>gulp</em> service stop and the <em>nginx</em> service start and run as our web server.</p>
+<p>For testing, we want the application in <em>production mode</em>, so that it runs exactly the same as it will when deployed to the cloud. As we pointed out earlier, when run in production the <em>dev_overrides</em> settings are ignored, which means we'll see the <em>gulp</em> service stop and the <em>nginx</em> service start and run as our web server.</p>
 
 <p>To start the application in production mode, run the following command:</p>
 
-<pre><code># Start the application in production mode
+<pre><code># Start the application with the production option
 $ ansible-container run --production
 </code></pre>
 
-<p>The following video shows the application starting with the <code>--production</code> option. Click the image below to watch the video:</p>
+<p>If we were running a CI/CD process, this is the point where we would run our automated testing scripts. In lieu of that, open a browser, and once again go to <a href="http://localhost:8080">http://localhost:8080</a> to confirm the site is working as expected. </p>
+
+<p>Click the image below to watch a video of the application starting with the <code>--production</code> option:</p>
 
 <p><a href="https://youtu.be/ATpYJhG1RV0"><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/production.png" alt="Testing"></a></p>
 
 <h2>
 <a id="deploy-the-application" class="anchor" href="#deploy-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Deploy the application</h2>
 
-<p>Once the application passes testing, it's time to deploy it to production. To demonstrate, we'll create a local instance of OpenShift, push images to its registry, generate and run the deployment, and check the results.</p>
+<p>Once the application passes testing, it's time to deploy it to production. To demonstrate, we'll create a local instance of OpenShift, push images to its registry, and then generate and run the deployment.</p>
 
 <h3>
 <a id="create-a-local-openshift-instance" class="anchor" href="#create-a-local-openshift-instance" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create a local OpenShift instance</h3>

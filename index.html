@@ -150,13 +150,13 @@ $ ansible-container run
 
 <p>You now have the <em>ansible.django-gulp-nginx</em> framework running, and if you open a browser, and go to <a href="http://localhost:8080">http://localhost:8080</a>, you will see the default "Hello World!" page.</p>
 
-<p>Let's make some changes by adding the source code for the <em>Not Google Plus</em> site. Start by opening a new terminal window. Then download the source, and drop it in place by running the following commands:</p>
+<p>Let's make some changes by adding the source code for the <em>Not Google Plus</em> site. Start by opening a new terminal window, then download the source, and drop it in place by running the following:</p>
 
 <pre><code># Set the working directory to your *demo* folder
 $ cd demo
 
 # Stop the containers running in your first terminal session
-$ ansible-container setop
+$ ansible-container stop
 
 # Download and expand the source archive
 $ curl -L https://github.com/ansible/ansible-container-demo/archive/v0.1.0.tar.gz | tar -xzv
@@ -176,7 +176,7 @@ $ ansible-container run
 <h3>
 <a id="tour-the-site" class="anchor" href="#tour-the-site" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tour the site</h3>
 
-<p>Now that you have the application running, lets check it out! Watch the video below, and follow along on your local site to register, log in, and create posts. Your site will be reachable at <a href="http://localhost:8080">http://localhost:8080</a>, and you can browse the API directly at <a href="http://localhost:8080/api/v1/">http://localhost:8080/api/v1/</a>.</p>
+<p>Let's check out <em>Not Google Plus</em>. Watch the video below, and follow along on your local site to register, log in, and create posts. Your site will be reachable at <a href="http://localhost:8080">http://localhost:8080</a>, and you can browse the API directly at <a href="http://localhost:8080/api/v1/">http://localhost:8080/api/v1/</a>.</p>
 
 <p>Click the image below to watch the video:</p>
 
@@ -192,7 +192,7 @@ $ ansible-container run
 <h2>
 <a id="testing-the-application" class="anchor" href="#testing-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing the application</h2>
 
-<p>Now that you made changes to the application by adding the code for <em>Not Google Plus</em>, you'll need to build a new set of image that contain the changes. During the build process the latest code gets added to the <em>nginx</em> and <em>django</em> images.</p>
+<p>Now that you made changes to the application by adding the code for <em>Not Google Plus</em>, you'll need to build a new set of image that contain the update source code. During the build process the latest code gets added to the <em>nginx</em> and <em>django</em> images, and you'll need the updated images to test and deploy.</p>
 
 <p>Start the build process by running the following command:</p>
 
@@ -217,16 +217,16 @@ demo-nginx                          20161205170642      5becc50f69a9        2 ho
 demo-gulp                           20161205170642      0644893c80d7        2 hours ago         508 MB
 </code></pre>
 
-<p>You now have a newer set of images with the updated code baked into the <em>nginx</em> and <em>django</em> images. Now when you deploy the application to production, you'll be deploying the <em>Not Google Plus</em> app.</p>
+<p>You now have a newer set of images with the updated code baked into the <em>nginx</em> and <em>django</em> images, and when you deploy the application to production, you'll be deploying the <em>Not Google Plus</em> app.</p>
 
 <h3>
 <a id="start-in-production-mode" class="anchor" href="#start-in-production-mode" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Start in production mode</h3>
 
-<p>For testing you want to launch the application in <em>production mode</em>, so that it runs exactly the same as it will when deployed to the cloud. As we pointed out earlier, when run in production the <em>dev_overrides</em> settings are ignored, which means we'll see the <em>gulp</em> service stop and the <em>nginx</em> container start and run as our web server.</p>
+<p>For testing you want to launch the application in <em>production mode</em>, so that it runs exactly the same as it will when deployed to the cloud. As we pointed out earlier, when run in production the <em>dev_overrides</em> settings are ignored, which means we'll see the <em>gulp</em> service stop and the <em>nginx</em> service start and run as our web server.</p>
 
 <p>To start the application in production mode, run the following command:</p>
 
-<pre><code># Start the appliction in production mode
+<pre><code># Start the application in production mode
 $ ansible-container run --production
 </code></pre>
 
@@ -237,7 +237,7 @@ $ ansible-container run --production
 <h2>
 <a id="deploy-the-application" class="anchor" href="#deploy-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Deploy the application</h2>
 
-<p>Once the application passes testing, it's time to deploy it to production. To demonstrate, we'll create a local instance of OpenShift, push images to its registry, generate a deployment playbook, run it, and check the results.</p>
+<p>Once the application passes testing, it's time to deploy it to production. To demonstrate, we'll create a local instance of OpenShift, push images to its registry, generate and run the deployment, and check the results.</p>
 
 <h3>
 <a id="create-a-local-openshift-instance" class="anchor" href="#create-a-local-openshift-instance" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create a local OpenShift instance</h3>

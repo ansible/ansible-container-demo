@@ -55,6 +55,10 @@ $ cd demo
 $ ansible-container init ansible.django-gulp-nginx
 </code></pre>
 
+<p>The following video shows the project init steps:</p>
+
+<p><a href="https://youtu.be/1Qv2GeSjyiY"><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/init.png" alt="Project Init"></a></p>
+
 <p>You now have a copy the <em>ansible.django-gulp-nginx</em> framework project in your <em>demo</em> directory. Inside <em>demo/ansible</em> you'll find a <code>container.yml</code> file describing in <a href="http://docs.ansible.com/ansible-container/container_yml/reference.html">Compose</a> the services that make up the application, and an Ansible playbook called <code>main.yml</code> containing a set of plays for building the application images.</p>
 
 <h3>
@@ -66,7 +70,7 @@ $ ansible-container init ansible.django-gulp-nginx
 $ ansible-container build
 </code></pre>
 
-<p><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/build_01.png" alt="Building the images"></p>
+<p><a href="https://youtu.be/xnzrNWHzFWY"><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/build.png" alt="Build Images"></a></p>
 
 <p>The build process launches a container for each service along with a build container. For each service container, the base image is the image specified in <code>container.yml</code>. The build container runs the <code>main.yml</code> playbook, and executes tasks on each of the containers. You'll see output from the playbook run in your terminal window as it progresses through the tasks. When the playbook completes, each image will
 be <code>committed</code>, creating a new set of base images.</p>

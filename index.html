@@ -74,7 +74,7 @@ $ ansible-container build
 
 <p>The build process launches a container for each service defined in <code>container.yml</code> along with a build container. For each service container, the base image is the image specified in <code>container.yml</code>. The build container runs the <code>main.yml</code> playbook, executing tasks on each of the service containers. When the playbook run completes, each image will be <code>committed</code>, creating a new set of images.</p>
 
-<p>When the build completes, use the <code>docker images</code> command to view the new images:</p>
+<p>When the build completes, run the <code>docker images</code> command to view a list of local images. The output will include the following images:</p>
 
 <pre><code># View the images
 $ docker images
@@ -91,15 +91,18 @@ demo-gulp                           latest              0644893c80d7        Abou
 <h3>
 <a id="run-the-application" class="anchor" href="#run-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Run the application</h3>
 
-<p>Now that you have the application images built in your environment, you can start the application by running the following:</p>
+<p>Now that you have the application images built in your environment, start the application by running the following:</p>
 
 <pre><code># Start the application
 $ ansible-container run
 </code></pre>
 
-<p>You should now see the output from each container streaming in your terminal window. The containers are running in the foreground, in <em>development mode</em>, which means that for each service the <em>dev_overrides</em> directive takes precedence.</p>
+<p>The containers are running in the foreground, with the output from each streaming in your terminal window. Open a browser, and go to <a href="http://localhost:8080">http://localhost:8080</a>, where you'll see the default "Hello World!" page.</p>
 
-<p>For example, take a look at the <em>gulp</em> service definition found in <code>container.yml</code>:</p>
+<h3>
+<a id="development-vs-production" class="anchor" href="#development-vs-production" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Development vs production</h3>
+
+<p>The containers are currently running in <em>development</em>, which means that for each service the <em>dev_overrides</em> directive takes precedence. For example, take a look at the <em>gulp</em> service definition found in <code>container.yml</code>:</p>
 
 <pre><code>  gulp:
     image: centos:7
@@ -124,9 +127,9 @@ $ ansible-container run
         state: absent
 </code></pre>
 
-<p>In development <em>dev_overrides</em> takes precedence, so the command <code>/usr/bin/dumb-init /usr/bin/gulp</code> will be executed, ports <code>8080</code> and <code>3001</code> will be exposed, and the container will be linked to the <em>django</em> service container.</p>
+<p>In development, <em>dev_overrides</em> takes precedence, so the command <code>/usr/bin/dumb-init /usr/bin/gulp</code> will be executed, ports <code>8080</code> and <code>3001</code> will be exposed, and the container will be linked to the <em>django</em> service container.</p>
 
-<p>If you were to run the <em>gulp</em> service in production, <em>dev_overrides</em> would be ignored completely. In production the <code>/bin/false</code> command would be executed, causing the container to immediately stop. No ports would be exposed, and the container would not be linked to the <em>django</em> service.</p>
+<p>The application can be started in production mode, by running <code>ansible-container run --production</code>. In production the <em>dev_overrides</em> directive is completely ignored, which means the <code>/bin/false</code> command is executed, causing the container to immediately stop. No ports are exposed, and the container is not linked to the <em>django</em> service.</p>
 
 <p>Since the frontend tools provided by the <em>gulp</em> service are only needed during development and not during production, we use <em>dev_overrides</em> to manage when the container runs.</p>
 
@@ -151,16 +154,14 @@ $ ansible-container run
 <p>In development the <em>nginx</em> service runs the <code>/bin/false</code> command, and immediately exits. But in production, it starts the <em>nginx</em> process, and takes the place of the <em>gulp</em> service as the application's web server.</p>
 
 <h3>
-<a id="develop-the-application" class="anchor" href="#develop-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Develop the application</h3>
+<a id="developing-the-application" class="anchor" href="#developing-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Developing the application</h3>
 
-<p>You now have the <em>ansible.django-gulp-nginx</em> framework running, and if you open a browser, and go to <a href="http://localhost:8080">http://localhost:8080</a>, you'll see the default "Hello World!" page.</p>
-
-<p>Let's make some changes by adding the source code for the <em>Not Google Plus</em> site. Start by opening a second terminal session, and then run the following commands to download the source and drop it into the project:</p>
+<p>Let's make some updates and create the <em>Not Google Plus</em> app, and then we'll see how to test and deploy it. To make the changes, start by opening a second terminal window. In the second window run the following commands to download the source, and update the project:</p>
 
 <pre><code># Set the working directory to your *demo* folder
 $ cd demo
 
-# Stop the containers running in your first terminal session
+# Stop the application (the containers are still running in the first window)
 $ ansible-container stop
 
 # Download and expand the source archive
@@ -176,7 +177,7 @@ $ cp -R ansible-container-demo-0.1.0/project/* project
 $ ansible-container run
 </code></pre>
 
-<p>The <em>Not Google Plus</em> application is now running. If you take a look at your browser, and once again go to <a href="http://localhost:8080">http://localhost:8080</a>, you'll see that the "Hello World!" page has been replaced.</p>
+<p>The <em>Not Google Plus</em> application is now running. If you take a look at your browser, and once again go to <a href="http://localhost:8080">http://localhost:8080</a>, you'll see that the "Hello World!" page has been replaced by our social media site.</p>
 
 <h3>
 <a id="tour-the-site" class="anchor" href="#tour-the-site" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tour the site</h3>
@@ -192,7 +193,7 @@ $ ansible-container run
 
 <p>Once you're finished, you can press <code>control-c</code> or <code>ctrl-c</code> to kill the containers. This will signal Docker to kill the processes running inside the containers, and shut the containers down. This works when the containers are running in the foreground, streaming output to your terminal window.</p>
 
-<p>You can also run <code>ansible-container stop</code>, as you did above, by opening a second terminal window, setting the working directory to your <em>demo</em> folder, and running the command. It will terminate all containers associated with the project, regardless of wether they're running in the foreground or in the background.</p>
+<p>You can also run <code>ansible-container stop</code>, as you did earlier, by opening a second terminal window, setting the working directory to your <em>demo</em> folder, and running the command. The <code>stop</code> command will terminate all containers associated with the project, regardless of whether they're running in the foreground or in the background.</p>
 
 <h2>
 <a id="testing-the-application" class="anchor" href="#testing-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing the application</h2>
@@ -244,12 +245,12 @@ $ ansible-container run --production
 <h2>
 <a id="deploy-the-application" class="anchor" href="#deploy-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Deploy the application</h2>
 
-<p>Once the application passes testing, it's time to deploy it to production. To demonstrate, we'll create a local instance of OpenShift, push images to its registry, and then generate and run the deployment.</p>
+<p>Once the application passes testing, it's time to deploy it to production. To demonstrate, we'll create a local instance of OpenShift, push images to its registry, and generate and run a deployment.</p>
 
 <h3>
 <a id="create-a-local-openshift-instance" class="anchor" href="#create-a-local-openshift-instance" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create a local OpenShift instance</h3>
 
-<p>To create an OpenShift instance you'll install the <code>oc</code> command line tool, and then run <code>oc cluster up</code>. The cluster runs in containers, making the install process almost trivial.</p>
+<p>To create an OpenShift instance you'll install the <code>oc</code> command line tool, and then run <code>oc cluster up</code> to create an instance running in containers.</p>
 
 <p>You'll find instructions in our <a href="http://docs.ansible.com/ansible-container/configure_openshift.html">Install and Configure OpenShift guide</a> to help you create an instance. One available installation method is the Ansible role <a href="https://galaxy.ansible.com/chouseknecht/cluster-up-role">chouseknecht.cluster-up-role</a>, which is demonstrated in the following video:</p>
 
@@ -285,7 +286,7 @@ to build a new example application in Ruby.
 
 <p>Before starting the application on the cluster, the images will need to be accessible, so you'll push them to the <em>demo</em> repository on the local registry.</p>
 
-<p>If you ran the role to create the OpenShift instance or worked through our guide, then a new hostname, <em>local.openshift</em>, was created for accessing the registry, and the <em>developer</em> account now has full admin access. So you'll employ both of these as you execute the following commands to push the images:   </p>
+<p>If you ran the role to create the OpenShift instance or worked through our guide, then a new hostname, <em>local.openshift</em>, was created for accessing the registry, and the <em>developer</em> account now has full admin access. You'll employ both as you execute the following commands to push the images:   </p>
 
 <pre><code># Set the working directory to the demo project
 $ cd demo

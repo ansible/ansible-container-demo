@@ -19,7 +19,7 @@
     </section>
 
     <section class="main-content">
-      <p>This page will take you through the complete lifecycle of a simple social media app called <em>Not Google Plus</em>. The application itself comes from a <a href="https://thinkster.io/django-angularjs-tutorial">tutorial</a>. But not to worry, this isn't a programming tutorial. Instead, we'll focus on the mechanics of building, testing and deploying the completed application.  </p>
+      <p>Ansible Container can manage the lifecycle of an application from development through cloud deployment. In this demo we'll create, test and deploy a new social media app called <em>Not Google Plus</em>. The application itself comes from a <a href="https://thinkster.io/django-angularjs-tutorial">tutorial</a>, but not to worry, this isn't a programming tutorial. Instead, we'll focus on how to use Ansible Container through each phase.  </p>
 
 <h2>
 <a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Requirements</h2>
@@ -62,7 +62,7 @@ $ ansible-container init ansible.django-gulp-nginx
 <p>You now have a copy the <em>ansible.django-gulp-nginx</em> framework project in your <em>demo</em> directory. Inside <em>demo/ansible</em> you'll find a <code>container.yml</code> file describing in <a href="http://docs.ansible.com/ansible-container/container_yml/reference.html">Compose</a> the services that make up the application, and an Ansible playbook called <code>main.yml</code> containing a set of plays for building the application images.</p>
 
 <h3>
-<a id="build-the-images" class="anchor" href="#build-the-images" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Build the images</h3>
+<a id="build-the-images" class="anchor" href="#build-the-images" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Build the Images</h3>
 
 <p>To start application development, we'll first need to build the images. Start the build process by running the following command:</p>
 
@@ -89,7 +89,7 @@ demo-gulp                           latest              0644893c80d7        Abou
 </code></pre>
 
 <h3>
-<a id="run-the-application" class="anchor" href="#run-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Run the application</h3>
+<a id="run-the-application" class="anchor" href="#run-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Run the Application</h3>
 
 <p>Now that you have the application images built in your environment, start the application by running the following:</p>
 
@@ -100,7 +100,7 @@ $ ansible-container run
 <p>The containers are running in the foreground, with the output from each streaming in your terminal window. Open a browser, and go to <a href="http://localhost:8080">http://localhost:8080</a>, where you'll see the default "Hello World!" page.</p>
 
 <h3>
-<a id="development-vs-production" class="anchor" href="#development-vs-production" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Development vs production</h3>
+<a id="development-vs-production" class="anchor" href="#development-vs-production" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Development vs Production</h3>
 
 <p>The containers are currently running in <em>development</em>, which means that for each service the <em>dev_overrides</em> directive takes precedence. For example, take a look at the <em>gulp</em> service definition found in <code>container.yml</code>:</p>
 
@@ -154,7 +154,7 @@ $ ansible-container run
 <p>In development the <em>nginx</em> service runs the <code>/bin/false</code> command, and immediately exits. But in production, it starts the <em>nginx</em> process, and takes the place of the <em>gulp</em> service as the application's web server.</p>
 
 <h3>
-<a id="developing-the-application" class="anchor" href="#developing-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Developing the application</h3>
+<a id="developing-the-application" class="anchor" href="#developing-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Developing the Application</h3>
 
 <p>Let's make some updates and create the <em>Not Google Plus</em> app, and then we'll see how to test and deploy it. To make the changes, start by opening a second terminal window. In the second window run the following commands to download the source, and update the project:</p>
 
@@ -180,7 +180,7 @@ $ ansible-container run
 <p>The <em>Not Google Plus</em> application is now running. If you take a look at your browser, and once again go to <a href="http://localhost:8080">http://localhost:8080</a>, you'll see that the "Hello World!" page has been replaced by our social media site.</p>
 
 <h3>
-<a id="tour-the-site" class="anchor" href="#tour-the-site" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tour the site</h3>
+<a id="tour-the-site" class="anchor" href="#tour-the-site" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tour the Site</h3>
 
 <p>Let's check out <em>Not Google Plus</em>. Watch the video below, and follow along on your local site to register, log in, and create posts. Your site will be reachable at <a href="http://localhost:8080">http://localhost:8080</a>, and you can browse the API directly at <a href="http://localhost:8080/api/v1/">http://localhost:8080/api/v1/</a>.</p>
 
@@ -189,14 +189,14 @@ $ ansible-container run
 <p><a href="https://youtu.be/XVOIVhcYd8M"><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/demo.png" alt="Site Tour"></a></p>
 
 <h3>
-<a id="stopping-the-containers" class="anchor" href="#stopping-the-containers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Stopping the containers</h3>
+<a id="stopping-the-containers" class="anchor" href="#stopping-the-containers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Stopping the Containers</h3>
 
 <p>Once you're finished, you can press <code>control-c</code> or <code>ctrl-c</code> to kill the containers. This will signal Docker to kill the processes running inside the containers, and shut the containers down. This works when the containers are running in the foreground, streaming output to your terminal window.</p>
 
 <p>You can also run <code>ansible-container stop</code>, as you did earlier, by opening a second terminal window, setting the working directory to your <em>demo</em> folder, and running the command. The <code>stop</code> command will terminate all containers associated with the project, regardless of whether they're running in the foreground or in the background.</p>
 
 <h2>
-<a id="testing-the-application" class="anchor" href="#testing-the-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing the application</h2>
+<a id="testing" class="anchor" href="#testing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing</h2>
 
 <p>Now that you made changes to the application by adding the code for <em>Not Google Plus</em>, you'll need to build a new set of images containing the updated source code before testing and deploying.</p>
 
@@ -225,9 +225,6 @@ demo-gulp                           20161205170642      0644893c80d7        2 ho
 
 <p>You now have a newer set of images with the updated code baked into the <em>nginx</em> and <em>django</em> images, and when you deploy the application to production, you'll be deploying the <em>Not Google Plus</em> app.</p>
 
-<h3>
-<a id="start-in-production-mode" class="anchor" href="#start-in-production-mode" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Start in production mode</h3>
-
 <p>For testing, we want the application in <em>production mode</em>, so that it runs exactly the same as it will when deployed to the cloud. As we pointed out earlier, when run in production the <em>dev_overrides</em> settings are ignored, which means we'll see the <em>gulp</em> service stop and the <em>nginx</em> service start and run as our web server.</p>
 
 <p>To start the application in production mode, run the following command:</p>
@@ -254,7 +251,7 @@ $ ansible-container run --production
 
 <p>You'll find instructions in our <a href="http://docs.ansible.com/ansible-container/configure_openshift.html">Install and Configure OpenShift guide</a> to help you create an instance. One available installation method is the Ansible role <a href="https://galaxy.ansible.com/chouseknecht/cluster-up-role">chouseknecht.cluster-up-role</a>, which is demonstrated in the following video:</p>
 
-<p><a href="https://youtu.be/iY4bkHDaxCc"><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images" alt="Creating an OpenShift instance"></a></p>
+<p><a href="https://youtu.be/iY4bkHDaxCc"><img src="https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/cluster.png" alt="Creating an OpenShift instance"></a></p>
 
 <p>To use the role, you'll need Ansible installed. Also, note in the video that the playbook is copied from the installed role's file structure. You'll find the playbook, <em>cluster-up.yml</em>, in the <em>files</em> subfolder.</p>
 

@@ -2,7 +2,7 @@
 
 # Ansible Container Demo
 
-[Ansible Container](https://github.com/ansible/ansible-container) can manage the lifecycle of an application from development through cloud deployment. In this demo we'll create, test and deploy a new social media app called *Not Google Plus*. The application itself comes from a [tutorial](https://thinkster.io/django-angularjs-tutorial), but not to worry, this isn't a programming tutorial. Instead, we'll focus on how to use Ansible Container through each phase.  
+[Ansible Container](https://github.com/ansible/ansible-container) can manage the lifecycle of an application from development through cloud deployment. In this demo we'll create, test and deploy a new social media app called *Not Google Plus*. The application comes from a [tutorial](https://thinkster.io/django-angularjs-tutorial), but not to worry, this isn't a programming tutorial. Instead, we'll focus on how to use Ansible Container through each phase.  
 
 ## Requirements
 

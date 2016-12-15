@@ -1,36 +1,33 @@
 language: python
 dist: trusty
 sudo: required
-
 services:
-  - docker
-
+- docker
 before_install:
-  - sudo apt-add-repository 'deb http://archive.ubuntu.com/ubuntu trusty-backports universe'
-  - sudo apt-get update -qq
-
+- sudo apt-add-repository 'deb http://archive.ubuntu.com/ubuntu trusty-backports universe'
+- sudo apt-get update -qq
 install:
-  - pip install ansible
-  - pip install -e git+https://github.com/ansible/ansible-container.git@develop#egg=ansible_container
-
+- pip install ansible
+- pip install -e git+https://github.com/ansible/ansible-container.git@develop#egg=ansible_container
 script:
-  - docker version
-  - docker-compose version
-  - docker info
-  - cd test
-  - mkdir demo
-  - cd demo  
-  - ansible-container init ansible.django-gulp-nginx
-  - cp -R ../../src/* src
-  - cp -R ../../project/* project
-  - ansible-container build
-  - ansible-container run -d
-  - docker ps -a
-  - docker images
-  - cd .. 
-  - ansible-playbook -i inventory test.yml
-  - cd demo 
-  - ansible-container stop -f
-
+- docker version
+- docker-compose version
+- docker info
+- cd test
+- mkdir demo
+- cd demo
+- ansible-container init ansible.django-gulp-nginx
+- cp -R ../../src/* src
+- cp -R ../../project/* project
+- ansible-container build
+- ansible-container run -d
+- docker ps -a
+- docker images
+- cd ..
+- ansible-playbook -i inventory test.yml
+- cd demo
+- ansible-container stop -f
 notifications:
-  email: false 
+  email: false
+  slack:
+    secure: fRFkgQ0VPWc38gfLjncaT8aJuL8HQ3XwtXti1y/EITLIrKZwGHX4SzPhXNngw2L6oNkKSirwEWbyofKbyj3HLZO616OVn09o1FQPMNpImaJG6unua60o7z4RW/81Sm2fhvPPBDLvoeOsW64g6iWD3/g5npKUW1AC4Sy6VYF4nUFxV30uaG8YvyxFwI6E7hOn1lWJk3OEKeIDigOyI6vyAHH67Lx71pnX/ixE1q5D+d4/DDEuGEAugVWdyc4HmQWo6zM6eWYZnVP1puWWPwfPAYnXjJ5wkj2wIB4O2AW0xQShtXRKcUq/PMsR8mnwWQQPC90ekvTFHGT0+uj2bedd+I4484OE22CIx6eNmlMaDfreuEVjpJDdGYz0TypvxtxNsZcDYho+Kl/WejAzl1G39QT26heDYX4IuKBPbMZu7q5mMPuCP2m5z5BcO4e1UtZb7BeI5pxbVpoIbufRqKFPT9IPgsujn9lNBw3KY42qkdhv/tnbyqKA7NrE1umwqFY5oo9eztaFiwq3fg1KVcVmz0OK/VtHGzMyfPqgsG+pCtV2uFD5Lf0ERFE1hyP4rNhBHWmRQJ0C0oRPBtjB/1p+UiCI0KPgQwbHvPUV3wa9wkMtYpnavlAQ4r4L/MqgnI2gwiGcmcVCsrf0f08bubPBm5pmwXesP55UmLo8drR3QMM=

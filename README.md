@@ -2,22 +2,22 @@
 
 # Ansible Container Demo
 
-[Ansible Container](https://github.com/ansible/ansible-container) can manage the lifecycle of an application from development through cloud deployment. In this demo we'll create, test and deploy a new social media app called *Not Google Plus*. The application comes from a [tutorial](https://thinkster.io/django-angularjs-tutorial), but not to worry, this isn't a programming tutorial. Instead, we'll focus on how to use Ansible Container through each phase.  
+[Ansible Container](https://github.com/ansible/ansible-container) can manage the lifecycle of an application from development through cloud deployment. To demonstrate, we'll create, test and deploy a new social media app called *Not Google Plus*. The application comes from a [tutorial](https://thinkster.io/django-angularjs-tutorial), but not to worry, this isn't a programming exercise. Instead, we'll focus on how to use Ansible Container at each phase.  
 
 ## Requirements
 
 Before continuing, you'll need a couple of things:
 
  - A Linux or OSX environment  
- - Ansible Container installed from source. See our [Running from source guide](http://docs.ansible.com/ansible-container/installation.html#running-from-source) for assistance.  
+ - Ansible Container installed from source. See our [Running from source guide](http://docs.ansible.com/ansible-container/installation.html#running-from-source) for assistance. Be sure to install *docker* engine support, and *openshift* engine support.  
  - Docker Engine or Docker for Mac. See [Docker Installation](https://docs.docker.com/engine/installation/) for assistance.
- - [Ansible 2.1+](http://docs.ansible.com/ansible/intro_installation.html), if you plan to run the deployment
+ - [Ansible 2.3+](http://docs.ansible.com/ansible/intro_installation.html)
 
 ## Getting Started
 
-Ansible roles can be used to initialize a new project or add services to existing projects. Roles are found on the [Ansible Galaxy](https://galaxy.ansible.com) web site, and there are two role types we can use with Ansible Container. The *container app* role contains a fully functioning app, and can be used to initialize an empty project. A *container enabled* role will add a service to an existing project, and it contains a Docker Compose service definition, a [playbook](http://docs.ansible.com/ansible/playbooks.html), and any files needed to build the container image.
+Ansible roles can be used to initialize a new project or add services to existing projects. Roles are found on the [Ansible Galaxy](https://galaxy.ansible.com) web site, and there are two role types we can use with Ansible Container. The *container app* role contains a fully functioning app that can be used to initialize an empty project. A *container enabled* role will add a service to an existing project.
 
-We'll start by creating an empty project directory, and initializing it with the [ansible.django-gulp-nginx](https://galaxy.ansible.com/ansible/django-gulp-nginx) role. It's a *container app* role, providing a fully functioning Django framework. And because we're able to start with this role, the containerization and Django setup work is already done. All that's left is to add the source code for our new social media site, and we'll have a completed app. 
+We'll start by creating an empty project directory, and initializing it with the *container app* role, [ansible.django-gulp-nginx](https://galaxy.ansible.com/ansible/django-gulp-nginx). It's a fully functioning Django framework. All we have to do is add the source code for our new social media site, and we'll have a complete, containerized, application. 
 
 Create the project folder, and initialize it by opening a terminal session and running the following commands:
 

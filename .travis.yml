@@ -20,7 +20,7 @@ script:
 - cp -R ../../src/* src
 - cp -R ../../project/* project
 - ansible-container build
-- ansible-container run -d
+- ansible-container run
 - docker ps -a
 - docker images
 - cd ..

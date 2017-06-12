@@ -6,7 +6,7 @@
     host: "0.0.0.0"
   tasks:
     - name: Pause
-      pause: seconds=5
+      pause: minutes=5 
  
     - name: Access the admin page
       get_url: 

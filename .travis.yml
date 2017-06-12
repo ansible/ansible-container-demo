@@ -7,8 +7,8 @@ before_install:
 - sudo apt-add-repository 'deb http://archive.ubuntu.com/ubuntu trusty-backports universe'
 - sudo apt-get update -qq
 install:
-- pip install ansible
-- pip install -e git+https://github.com/ansible/ansible-container.git@develop#egg=ansible_container
+- pip install https://github.com/ansible/ansible/archive/devel.tar.gz
+- pip install -e git+https://github.com/ansible/ansible-container.git@develop#egg=ansible_container[docker]
 script:
 - docker version
 - docker-compose version

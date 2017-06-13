@@ -1,9 +1,5 @@
 [![Build Status](https://travis-ci.org/ansible/ansible-container-demo.svg?branch=master)](https://travis-ci.org/ansible/ansible-container-demo)
 
-# Ansible Container Demo
-
-[Ansible Container](https://github.com/ansible/ansible-container) can manage the lifecycle of an application from development through cloud deployment. To demonstrate, we'll create, test and deploy a new social media application called *Not Google Plus*.
-
 The application comes from a [tutorial](https://thinkster.io/django-angularjs-tutorial), but not to worry, this isn't a programming exercise. Instead, we'll focus on how to use Ansible Container at each phase.  
 
 ## Requirements
@@ -197,7 +193,8 @@ $ cp -R ansible-container-demo-0.1.0/project/* project
 $ ansible-container run
 ```
 
-The *Not Google Plus* application is now running. If you open your browser, and once again go to [http://localhost:8080](http://localhost:8080), you'll see that the "Hello World!" page has been replaced by our social media site.
+Check the *gulp* service log using the `docker logs -f demo_gulp_1` command, and once the web server is running, the 
+*Not Google Plus* application will be available. If you open your browser, and go to [http://localhost:8080](http://localhost:8080), you'll see that the "Hello World!" page has been replaced by our social media site.
 
 ### Tour the Site 
 
@@ -209,7 +206,7 @@ Click the image below to watch a video tour of the site:
 
 ## Testing
 
-Now that you made changes to the application by adding the code for *Not Google Plus*, you'll need to build a new set of images containing the updated source code, before testing and deploying.
+Now that you made changes to the application by adding the code for *Not Google Plus*, you'll need to build a new set of images that contain the updated source code, before moving on to testing and deployment.
 
 Run the following to stop the containers, and then start the build process. This time, use the `--no-container-cache` option on the  `build` command to force the rebuild of each image, and insure that the new source code gets picked up. 
 
@@ -243,7 +240,7 @@ centos               7                   3bee3060bfc8        7 days ago         
 ansible/postgresql   latest              d1c4b61b9fde        5 months ago        396 MB
 ```
 
-There's now new set of images with the updated code baked into them. Now when you deploy the application to production, you'll be deploying the *Not Google Plus* app.
+There's a new set of images containing the updated code. Now when you deploy the application to production, you'll be deploying the *Not Google Plus* app.
 
 For testing, we want the application in *production mode*, so that it runs exactly the same as it will when deployed to the cloud. As we pointed out earlier, when run in production the *dev_overrides* settings are ignored, which means we'll see the *gulp* service stop and the *nginx* service start.
 
@@ -262,7 +259,7 @@ Click the image below to watch a video of the application starting with the `--p
 
 ## Deploy the application
 
-Once the application passes testing, it's time to deploy it to production. To demonstrate, we'll create a local instance of OpenShift, and run the `deploy` command to push images and generate a deployment playbook.
+Once the application passes testing, it's time to deploy it. To demonstrate, we'll create a local instance of OpenShift, and run the `deploy` command to push images and generate a deployment playbook.
 
 ### Create a local OpenShift instance
 
@@ -276,7 +273,7 @@ To use the role, you'll need Ansible installed. Also, note in the video that the
  
 ### Create an OpenShift project
 
-Now that you have an OpenShift instance, run the following to make sure you're logged into the cluster as *developer*, and create a *demo* project:
+Now that you have an OpenShift instance, run the following to make sure you're logged into the cluster as the *developer* user, and create a *demo* project:
 
 ```bash
 # Verify that we're logged in as the *developer* user
@@ -288,9 +285,11 @@ $ oc new-project demo
 ```
 
 **Note**
-> When you run the `deploy` command, it will attempt to authenticate to the registry using `docker login`, which will check for an existing credential in `${HOME}/.docker/config.json`. If there is an existing entry in this file for you local OpenShift cluster, you may need to remove it, if the token has expired. Also, you'll need to remove it if the entry points to a key store. Key stores cannot be accessed from within the Conductor container, where the authentication with the registry will actually take place.
+> When you run the `deploy` command, it will attempt to authenticate to the registry using `docker login`, which will check for an existing credential in `${HOME}/.docker/config.json`. If there is an existing entry in this file for the local OpenShift cluster, you'll need to remove it, if the token has expired. Also, you'll need to remove it if the entry points to a key store. Key stores cannot be accessed from within the Conductor container, where the authentication with the registry will actually take place.
 
-The project name is defined in `container.yml`. Within the *settings* section, you will find a *k8s_namespace* section that sets the name. The project name is arbitrary. However, before running the `deploy` command, the project must already exist, and the user you're logged in as must have access to it. 
+The project name is defined in `container.yml`. Within the *settings* section, you will find a *k8s_namespace* directive that sets the name. The project name is arbitrary. However, before running the `deploy` command, the project must already exist, and the user you're logged in as must have access to it.
+
+The reason for creating the project first is because the `deploy` process will attempt to push images to the local registry using the project name as the namespace. If the project does not already exist, then the push will fail. 
 
 ### Run the deployment 
  

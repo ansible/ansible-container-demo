@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/ansible/ansible-container-demo.svg?branch=master)](https://travis-ci.org/ansible/ansible-container-demo)
 
+[Ansible Container](https://github.com/ansible/ansible-container) can manage the lifecycle of an application from development through cloud deployment. To demonstrate, we'll create, test and deploy a new social media application called *Not Google Plus*.
+
 The application comes from a [tutorial](https://thinkster.io/django-angularjs-tutorial), but not to worry, this isn't a programming exercise. Instead, we'll focus on how to use Ansible Container at each phase.  
 
 ## Requirements

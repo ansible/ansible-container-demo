@@ -204,7 +204,7 @@ Let's check out *Not Google Plus*. Watch the video below, and follow along on yo
 
 Click the image below to watch a video tour of the site:
 
-[![Site Tour](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/demo.png)](https://youtu.be/vf2tw7Zbpfw)
+[![Site Tour](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/demo.png)](https://youtu.be/6ZIkuOEHitQ)
 
 ## Testing
 

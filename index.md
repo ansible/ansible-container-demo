@@ -7,7 +7,7 @@ The application comes from a [tutorial](https://thinkster.io/django-angularjs-tu
 Before continuing, you'll need a couple of things:
 
  - A Linux or OSX environment  
- - Ansible Container installed from source. See our *[running from source guide](http://docs.ansible.com/ansible-container/installation.html#running-from-source)* for assistance. Be sure to install *docker* engine support, and *openshift* engine support.  
+ - Ansible Container installed from source. See our *[Running from source guide](http://docs.ansible.com/ansible-container/installation.html#running-from-source)* for assistance. Be sure to install *docker* engine support, and *openshift* engine support.  
  - Docker Engine or Docker for Mac. See [Docker Installation](https://docs.docker.com/engine/installation/) for assistance.
  - [Ansible 2.3+](http://docs.ansible.com/ansible/intro_installation.html)
 

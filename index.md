@@ -193,7 +193,8 @@ $ cp -R ansible-container-demo-0.1.0/project/* project
 $ ansible-container run
 ```
 
-The *Not Google Plus* application is now running. If you open your browser, and once again go to [http://localhost:8080](http://localhost:8080), you'll see that the "Hello World!" page has been replaced by our social media site.
+Check the *gulp* service log using the `docker logs -f demo_gulp_1` command, and once the web server is running, the 
+*Not Google Plus* application will be available. If you open your browser, and go to [http://localhost:8080](http://localhost:8080), you'll see that the "Hello World!" page has been replaced by our social media site.
 
 ### Tour the Site 
 

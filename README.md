@@ -2,24 +2,28 @@
 
 # Ansible Container Demo
 
-[Ansible Container](https://github.com/ansible/ansible-container) can manage the lifecycle of an application from development through cloud deployment. To demonstrate, we'll create, test and deploy a new social media app called *Not Google Plus*. The application comes from a [tutorial](https://thinkster.io/django-angularjs-tutorial), but not to worry, this isn't a programming exercise. Instead, we'll focus on how to use Ansible Container at each phase.  
+[Ansible Container](https://github.com/ansible/ansible-container) can manage the lifecycle of an application from development through cloud deployment. To demonstrate, we'll create, test and deploy a new social media application called *Not Google Plus*.
+
+The application comes from a [tutorial](https://thinkster.io/django-angularjs-tutorial), but not to worry, this isn't a programming exercise. Instead, we'll focus on how to use Ansible Container at each phase.  
 
 ## Requirements
 
 Before continuing, you'll need a couple of things:
 
  - A Linux or OSX environment  
- - Ansible Container installed from source. See our [Running from source guide](http://docs.ansible.com/ansible-container/installation.html#running-from-source) for assistance. Be sure to install *docker* engine support, and *openshift* engine support.  
+ - Ansible Container installed from source. See our *[running from source guide](http://docs.ansible.com/ansible-container/installation.html#running-from-source)* for assistance. Be sure to install *docker* engine support, and *openshift* engine support.  
  - Docker Engine or Docker for Mac. See [Docker Installation](https://docs.docker.com/engine/installation/) for assistance.
  - [Ansible 2.3+](http://docs.ansible.com/ansible/intro_installation.html)
 
 ## Getting Started
 
-Ansible roles can be used to initialize a new project or add services to existing projects. Roles are found on the [Ansible Galaxy](https://galaxy.ansible.com) web site, and there are two role types we can use with Ansible Container. The *container app* role contains a fully functioning app that can be used to initialize an empty project. A *container enabled* role will add a service to an existing project.
+Ansible Container uses Ansible roles to build images, initialize projects, and add services to existing projects. You can find roles contributed and maintained by the community at [Ansible Galaxy](https://galaxy.ansible.com).
 
-We'll start by creating an empty project directory, and initializing it with the *container app* role, [ansible.django-gulp-nginx](https://galaxy.ansible.com/ansible/django-gulp-nginx). It's a fully functioning Django framework. All we have to do is add the source code for our new social media site, and we'll have a complete, containerized, application. 
+Keep in mind, there are three different types of roles. There are standard roles that simply execute tasks, which we can use with Ansible Container to buid images. Container App roles can be used to initialize an Ansible Container project, and Container Enabled roles define a service that can be added to an existing project.  
 
-Create the project folder, and initialize it by opening a terminal session and running the following commands:
+To initialize our project we'll use the Container App role, *[ansible.django-gulp-nginx](https://galaxy.ansible.com/ansible/django-gulp-nginx)*. We'll start by creating an empty project directory, setting the new directory as the working directory, and then running the `init` command to copy the full contents of the role into the directory. This particular role will give us a fully functioning Django framework. 
+
+Go ahead and initialize a new project called *demo* by opening a terminal session, and executing the following commands:
 
 ```
 # Create an empty directory called 'demo'
@@ -34,78 +38,113 @@ $ ansible-container init ansible.django-gulp-nginx
 
 The following video shows the project init steps:
 
-[![Project Init](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/init.png)](https://youtu.be/1Qv2GeSjyiY)
+[![Project Init](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/init.png)](https://youtu.be/UTUBO7JHxWM)
 
-
-You now have a copy the *ansible.django-gulp-nginx* framework project in your *demo* directory. Inside *demo/ansible* you'll find a `container.yml` file describing in [Compose](http://docs.ansible.com/ansible-container/container_yml/reference.html) the services that make up the application, and an Ansible playbook called `main.yml` containing a set of plays for building the application images.
+You now have a copy of the *ansible.django-gulp-nginx* framework project in your *demo* directory. Among the files added to the directory, you'll find a `container.yml` file describing the services that make up the application, a `roles` directory containing custom roles used to services, and all the supporting source files that make up the framework project.
 
 ### Build the Images
 
-To start application development, we'll first need to build the images. Start the build process by running the following command:
+The `container.yml` file defines four services: *django, gulp, nginx, and postgresql*. Before we can use the services, and begin application development, we need to build the images. Start the build process by running the following command:
 
 ```
+# Set the working directory to demo
+$ cd demo 
+
 # Start the image build process
 $ ansible-container build
 ```
 
-[![Build Images](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/build.png)](https://youtu.be/xnzrNWHzFWY)
+[![Build Images](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/build.png)](https://youtu.be/J6SMRomTCxY)
 
-The build process launches a container for each service defined in `container.yml` along with a build container. For each service container, the base image is the image specified in `container.yml`. The build container runs the `main.yml` playbook, executing tasks on each of the service containers. When the playbook run completes, each image will be `committed`, creating a new set of images.
+For each service that has a set of roles in `container.yml`, the process executes the roles to build the service. It does this by starting the Conductor container, and starting a container for the service. It then executes the Ansible roles one at time. For each role, it generates a playbook to execute the role. It runs the playbook on the Conductor container, and executes role tasks against the service container.
+
+After each role finishes, a snapshot is taken of the service container, and committed as a new image layer. Together, the complete set of layers forms the image for the service.
 
 When the build completes, run the `docker images` command to view a list of local images. The output will include the following images:
 
-```
+```bash
 # View the images
 $ docker images
 
-REPOSITORY                          TAG                 IMAGE ID            CREATED             SIZE
-demo-django                         20161205170642      dbe68f4e3c74        About an hour ago   1.28 GB
-demo-django                         latest              dbe68f4e3c74        About an hour ago   1.28 GB
-demo-nginx                          20161205170642      5becc50f69a9        About an hour ago   270 MB
-demo-nginx                          latest              5becc50f69a9        About an hour ago   270 MB
-demo-gulp                           20161205170642      0644893c80d7        About an hour ago   508 MB
-demo-gulp                           latest              0644893c80d7        About an hour ago   508 MB
+demo-django          20170613005625      32819eb0ae21        2 hours ago         428 MB
+demo-django          latest              32819eb0ae21        2 hours ago         428 MB
+demo-nginx           20170613001807      de4e2b36cc13        2 hours ago         272 MB
+demo-nginx           latest              de4e2b36cc13        2 hours ago         272 MB
+demo-gulp            20170613001455      9dca2dd36ab0        2 hours ago         670 MB
+demo-gulp            latest              9dca2dd36ab0        2 hours ago         670 MB
+demo-conductor       latest              6583f1d349aa        2 hours ago         550 MB
+centos               7                   3bee3060bfc8        7 days ago          193 MB
+ansible/postgresql   latest              d1c4b61b9fde        5 months ago        396 MB
 ```
 
 ### Run the Application
 
 Now that you have the application images built in your environment, start the application by running the following:
 
-```
+```bash
 # Start the application
 $ ansible-container run
 ```
-The containers are running in the foreground, with the output from each streaming in your terminal window. Open a browser, and go to [http://localhost:8080](http://localhost:8080), where you'll see the default "Hello World!" page.
+
+The containers are now running in the background. The *gulp* service proxies requests to the *django* service. But before it can be accessed, it first has to install *node* and *bower* packages required by the frontend, and then start the web server. 
+
+Check its progress by running the following to watch the service's log output:
+
+```bash
+# Tail the log for the gulp service
+$ docker logs -f demo_gulp_1
+```
+
+Once you see the following in the log output, the web service is running and accessible:
+
+```
+[17:05:29] Starting 'js'...
+[BS] Access URLs:
+ -----------------------------------
+       Local: http://localhost:8080
+    External: http://172.21.0.4:8080
+ -----------------------------------
+          UI: http://localhost:3001
+ UI External: http://172.21.0.4:3001
+ -----------------------------------
+[BS] Serving files from: dist
+[17:05:30] Finished 'lib' after 601 ms
+[17:05:30] Finished 'html' after 574 ms
+[17:05:30] Finished 'sass' after 644 ms
+[17:05:30] Finished 'templates' after 685 ms
+[17:05:30] Finished 'js' after 631 ms
+``` 
+ 
+To access the server, open a browser, and go to [http://localhost:8080](http://localhost:8080), where you'll see the default "Hello World!" page.
 
 ### Development vs Production
 
-The containers are currently running in *development*, which means that for each service the *dev_overrides* directive takes precedence. For example, take a look at the *gulp* service definition found in `container.yml`:
+The containers are currently running in *development* mode, which means that for each service the *dev_overrides* directive takes precedence. For example, take a look at the *gulp* service definition found in `container.yml`:
 
 ```
-  gulp:
-    image: centos:7
-    user: '{{ NODE_USER }}'
-    working_dir: '{{ NODE_HOME }}'
-    command: ['/bin/false']
-    environment:
-      NODE_HOME: '{{ NODE_HOME }}'
-    volumes:
-      - "${PWD}:{{ NODE_HOME }}"
-    dev_overrides:
-      command: [/usr/bin/dumb-init, /usr/bin/gulp]
-      ports:
-      - 8080:{{ GULP_DEV_PORT }}
+gulp:
+  from: 'centos:7'
+  roles:
+    - role: gulp-static
+  working_dir: '{{ NODE_HOME }}'
+  command: ['/bin/false']
+  environment:
+    NODE_HOME: '{{ NODE_HOME }}'
+  dev_overrides:
+    entrypoint: [/entrypoint.sh]
+    command: [/usr/bin/dumb-init, /usr/local/bin/gulp]
+    ports:
+      - '8080:{{ GULP_DEV_PORT }}'
       - 3001:3001
-      links:
+    links:
       - django
-    options:
-      kube:
-        state: absent
-      openshift:
-        state: absent
+    volumes:
+      - '$PWD:{{ NODE_HOME }}'
+  openshift:
+    state: absent
 ```
 
-In development, *dev_overrides* takes precedence, so the command `/usr/bin/dumb-init /usr/bin/gulp` will be executed, ports `8080` and `3001` will be exposed, and the container will be linked to the *django* service container.
+In development, *dev_overrides* takes precedence, so the command `/usr/bin/dumb-init /usr/local/bin/gulp` will be executed, ports `8080` and `3001` will be exposed, and the container will be linked to the *django* service container.
 
 The application can be started in production mode, by running `ansible-container run --production`. In production the *dev_overrides* directive is completely ignored, which means the `/bin/false` command is executed, causing the container to immediately stop. No ports are exposed, and the container is not linked to the *django* service.
 
@@ -114,33 +153,35 @@ Since the frontend tools provided by the *gulp* service are only needed during d
 The same is true for the *nginx* service. Take a look at the service definition in `container.yml`, and you'll notice it's configured opposite of the *gulp* service:
 
 ```
-  nginx:
-    image: centos:7
-    ports:
-    - {{ DJANGO_PORT }}:8000
-    user: nginx
-    links:
+nginx:
+  from: 'centos:7'
+  roles:
+    - role: ansible.nginx-container
+      ASSET_PATHS:
+        - /tmp/dist
+      PROXY: yes
+      PROXY_PASS: 'http://django:8080'
+      PROXY_LOCATION: "~* /(admin|api)"
+  ports:
+    - '{{ DJANGO_PORT }}:8000'
+  links:
     - django
-    command: ['/usr/bin/dumb-init', 'nginx', '-c', '/etc/nginx/nginx.conf']
-    dev_overrides:
-      ports: []
-      command: /bin/false
-    options:
-      kube:
-        runAsUser: 1000
+  dev_overrides:
+    ports: []
+    command: /bin/false
 ```
 
 In development the *nginx* service runs the `/bin/false` command, and immediately exits. But in production, it starts the *nginx* process, and takes the place of the *gulp* service as the application's web server.
 
 ### Developing the Application
 
-Let's make some updates and create the *Not Google Plus* app, and then we'll see how to test and deploy it. To make the changes, start by opening a second terminal window. In the second window run the following commands to download the source, and update the project:
+Let's make some updates, and create the *Not Google Plus* app, and then we'll see how to test and deploy it. To make the changes, run the following commands to download the source code, and update the project:
 
 ```
 # Set the working directory to your *demo* folder
 $ cd demo
 
-# Stop the application (the containers are still running in the first window)
+# Stop the application
 $ ansible-container stop
 
 # Download and expand the source archive
@@ -156,7 +197,7 @@ $ cp -R ansible-container-demo-0.1.0/project/* project
 $ ansible-container run
 ```
 
-The *Not Google Plus* application is now running. If you take a look at your browser, and once again go to [http://localhost:8080](http://localhost:8080), you'll see that the "Hello World!" page has been replaced by our social media site.
+The *Not Google Plus* application is now running. If you open your browser, and once again go to [http://localhost:8080](http://localhost:8080), you'll see that the "Hello World!" page has been replaced by our social media site.
 
 ### Tour the Site 
 
@@ -164,46 +205,47 @@ Let's check out *Not Google Plus*. Watch the video below, and follow along on yo
 
 Click the image below to watch a video tour of the site:
 
-[![Site Tour](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/demo.png)](https://youtu.be/XVOIVhcYd8M)
-
-### Stopping the Containers
-
-Once you're finished, you can press `control-c` or `ctrl-c` to kill the containers. This will signal Docker to kill the processes running inside the containers, and shut the containers down. This works when the containers are running in the foreground, streaming output to your terminal window.
-
-You can also run `ansible-container stop`, as you did earlier, by opening a second terminal window, setting the working directory to your *demo* folder, and running the command. The `stop` command will terminate all containers associated with the project, regardless of whether they're running in the foreground or in the background.
+[![Site Tour](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/demo.png)](https://youtu.be/vf2tw7Zbpfw)
 
 ## Testing
 
-Now that you made changes to the application by adding the code for *Not Google Plus*, you'll need to build a new set of images containing the updated source code before testing and deploying.
+Now that you made changes to the application by adding the code for *Not Google Plus*, you'll need to build a new set of images containing the updated source code, before testing and deploying.
 
-Start the build process by running the following command:
+Run the following to stop the containers, and then start the build process. This time, use the `--no-container-cache` option on the  `build` command to force the rebuild of each image, and insure that the new source code gets picked up. 
 
 ```
+# Stop the running containers
+$ ansible-container stop 
+
 # Start the build process
-$ ansible-container build
+$ ansible-container build --no-container-cache
 ```  
 
-Once the build process completes, take a look at your local images using `docker images`:
+Once the build process completes, take a look at the local images using `docker images`:
 
 ```
 # View the images once again
 $ docker images
 
-REPOSITORY                          TAG                 IMAGE ID            CREATED             SIZE
-demo-django                         20161205192107      103a28329385        4 minutes ago       2.31 GB
-demo-django                         latest              103a28329385        4 minutes ago       2.31 GB
-demo-gulp                           20161205192107      b264122208b5        5 minutes ago       534 MB
-demo-gulp                           latest              b264122208b5        5 minutes ago       534 MB
-demo-nginx                          20161205192107      7206eff9bf9b        5 minutes ago       295 MB
-demo-nginx                          latest              7206eff9bf9b        5 minutes ago       295 MB
-demo-django                         20161205170642      dbe68f4e3c74        2 hours ago         1.28 GB
-demo-nginx                          20161205170642      5becc50f69a9        2 hours ago         270 MB
-demo-gulp                           20161205170642      0644893c80d7        2 hours ago         508 MB
+REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
+demo-nginx           20170613012958      b92a8065656e        About an hour ago   272 MB
+demo-nginx           latest              b92a8065656e        About an hour ago   272 MB
+demo-gulp            20170613012504      65da0dbb9941        About an hour ago   670 MB
+demo-gulp            latest              65da0dbb9941        About an hour ago   670 MB
+demo-django          20170613011928      70c3cce3a2b4        About an hour ago   428 MB
+demo-django          latest              70c3cce3a2b4        About an hour ago   428 MB
+demo-gulp            20170613010219      4da2ebf7007a        About an hour ago   668 MB
+demo-django          20170613005625      32819eb0ae21        2 hours ago         428 MB
+demo-nginx           20170613001807      de4e2b36cc13        2 hours ago         272 MB
+demo-gulp            20170613001455      9dca2dd36ab0        2 hours ago         670 MB
+demo-conductor       latest              6583f1d349aa        2 hours ago         550 MB
+centos               7                   3bee3060bfc8        7 days ago          193 MB
+ansible/postgresql   latest              d1c4b61b9fde        5 months ago        396 MB
 ```
 
-You now have a newer set of images with the updated code baked into the *nginx* and *django* images, and when you deploy the application to production, you'll be deploying the *Not Google Plus* app.
+There's now new set of images with the updated code baked into them. Now when you deploy the application to production, you'll be deploying the *Not Google Plus* app.
 
-For testing, we want the application in *production mode*, so that it runs exactly the same as it will when deployed to the cloud. As we pointed out earlier, when run in production the *dev_overrides* settings are ignored, which means we'll see the *gulp* service stop and the *nginx* service start and run as our web server.
+For testing, we want the application in *production mode*, so that it runs exactly the same as it will when deployed to the cloud. As we pointed out earlier, when run in production the *dev_overrides* settings are ignored, which means we'll see the *gulp* service stop and the *nginx* service start.
 
 To start the application in production mode, run the following command:
 
@@ -214,96 +256,69 @@ $ ansible-container run --production
 
 If we were running a CI/CD process, this is the point where we would run our automated testing scripts. In lieu of that, open a browser, and once again go to [http://localhost:8080](http://localhost:8080) to confirm the site is working as expected. 
 
-Click the image below to watch a video of the application starting with the ``--production`` option:
+Click the image below to watch a video of the application starting with the `--production` option:
 
-[![Testing](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/production.png)](https://youtu.be/ATpYJhG1RV0)
+[![Testing](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/production.png)](https://youtu.be/rXJW5JoWTl4) 
 
 ## Deploy the application
 
-Once the application passes testing, it's time to deploy it to production. To demonstrate, we'll create a local instance of OpenShift, push images to its registry, and generate and run a deployment.
+Once the application passes testing, it's time to deploy it to production. To demonstrate, we'll create a local instance of OpenShift, and run the `deploy` command to push images and generate a deployment playbook.
 
 ### Create a local OpenShift instance
 
-To create an OpenShift instance you'll install the ``oc`` command line tool, and then run `oc cluster up` to create an instance running in containers.
+To run the deployment, you'll need access to an OpenShift instance. The [Install and Configure Openshift](http://docs.ansible.com/ansible-container/configure_openshift.html) guide at our doc site provides a how-to that will help you create a containerized instance.
 
-You'll find instructions in our [Install and Configure OpenShift guide](http://docs.ansible.com/ansible-container/configure_openshift.html) to help you create an instance. One available installation method is the Ansible role [chouseknecht.cluster-up-role](https://galaxy.ansible.com/chouseknecht/cluster-up-role), which is demonstrated in the following video:
+[Minishift](https://github.com/minishift/minishift) is a virtual machine that hosts a Docker daemon, and a containerized OpenShift cluster. The following demonstrates creating a [minishift](https://github.com/minishift/minishift) instance by running the Ansible role, [chouseknecht.minishift-up-role](https://galaxy.ansible.com/chouseknecht/minishift-up-role):
 
-[![Creating an OpenShift instance](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/cluster.png)](https://youtu.be/iY4bkHDaxCc)
+[![Creating an OpenShift instance](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/cluster.png)](https://youtu.be/UqGdqJf3iFc)
 
-To use the role, you'll need Ansible installed. Also, note in the video that the playbook is copied from the installed role's file structure. You'll find the playbook, *cluster-up.yml*, in the *files* subfolder.
-
-As noted in the role's [README](https://github.com/chouseknecht/cluster-up-role/blob/master/README.md), if you have not already added the *insecure-registry* option to Docker, the role will error, and provide the subnet or IP range that needs to be added. You'll also need to add the value of the *openshift_hostname* option, which by default is *local.openshift*. For more about adding the --insecure-registry option see [Docker's documentation](https://docs.docker.com/registry/insecure/). 
-
+To use the role, you'll need Ansible installed. Also, note in the video that the playbook is copied from the installed role's file structure. You'll find the playbook, *minishift-up.yml*, in the *files* directory.
+ 
 ### Create an OpenShift project
 
 Now that you have an OpenShift instance, run the following to make sure you're logged into the cluster as *developer*, and create a *demo* project:
 
-```
+```bash
 # Verify that we're logged in as the *developer* user
 $ oc whoami
 developer
 
 # Create a demo project
 $ oc new-project demo
-
-Now using project "demo" on server "https://...:8443".
-
-You can add applications to this project with the 'new-app' command. For example, try:
-
-    oc new-app centos/ruby-22-centos7~https://github.com/openshift/ruby-ex.git
-
-to build a new example application in Ruby.
 ```
 
-### Push the images
+**Note**
+> When you run the `deploy` command, it will attempt to authenticate to the registry using `docker login`, which will check for an existing credential in `${HOME}/.docker/config.json`. If there is an existing entry in this file for you local OpenShift cluster, you may need to remove it, if the token has expired. Also, you'll need to remove it if the entry points to a key store. Key stores cannot be accessed from within the Conductor container, where the authentication with the registry will actually take place.
 
-Before starting the application on the cluster, the images will need to be accessible, so you'll push them to the *demo* repository on the local registry.
+The project name is defined in `container.yml`. Within the *settings* section, you will find a *k8s_namespace* section that sets the name. The project name is arbitrary. However, before running the `deploy` command, the project must already exist, and the user you're logged in as must have access to it. 
 
-If you ran the role to create the OpenShift instance or worked through our guide, then a new hostname, *local.openshift*, was created for accessing the registry, and the *developer* account now has full admin access. You'll employ both as you execute the following commands to push the images:   
+### Run the deployment 
+ 
+Next, use the `deploy` command to push the project images to the local registry, and create the deployment playbook. For demonstration purposes, we're referencing the *local_openshift* registry defined in `container.yml`. Depending on how you created the local OpenShift cluster, you may need to adjust the registry attributes.
 
+One of the registry attributes is *namespace*. For OpenShift and K8s, the registry *namespace* should match the *name* value set in *k8s_namespace* within the *settings* section. In the case of OpenShift, the *name* in *k8s_namespace* will be the *project* name, and for K8s, it's the *Namespace*. 
+
+Once you're ready to push the images, run the following from the root of the *demo* project directory:
+
+```bash
+# Push the built images and generate the deployment playbook
+$ ansible-container --engine openshift deploy --push-to local_openshift --username developer --password $(oc whoami -t)
 ```
-# Set the working directory to the demo project
-$ cd demo
 
-# Push the demo images to the local registry 
-$ ansible-container push --push-to https://local.openshift/demo --username developer --password $(oc whoami -t)
+The above will authenticate to the registry using the `developer` username, and a token generated by the `oc whoami -t` command. This presumes that your cluster has a `developer` account, and that you previously authenticated to the cluster with this account.
+
+After pushing the images, a playbook is generated and written to the `ansible-deployment` directory. The name of the playbook will match the project name, and have a `.yml` extension. In this case, the name of the playbook will be `demo.yml`.
+
+You will also find a `roles` directory containing the `ansible.kubernetes-modules` role. The deployment playbook relies on this role for access to the Ansible Kubernetes modules.
+
+To deploy the application, execute the playbook, making sure to include the appropriate tag. Possible tags include: `start`, `stop`, `restart`, and `destroy`. To start the application, run the following:
+
+```bash
+# Run the deployment playbook
+$ ansible-playbook ./ansible-deployment/demo.yml --tags start
 ```
-
-The following video shows the project's images being pushed to the local registry:
-
-[![Push images](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/push.png)](https://youtu.be/KklXsFKd8gQ)
-
-### Generate the deployment artifacts 
-
-Now you'll generate a playbook and role that are capable of deploying the application. From the *demo* directory, execute the `shipit` command as pictured below, passing the `--pull-from` option with the URL to the local registry:
-
-```
-# Generate the deployment playbook and role
-$ ansible-container shipit openshift --pull-from https://local.openshift/demo
-```
-Running the above creates, a playbook, *shipit-openshift.yml*, in the *ansible* directory, and a role, *demo-openshift*, in the *ansible/roles* directory as demonstrated in the following video:
-
-[![Run shipit](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/shipit.png)](https://youtu.be/4a8WKO5Kjlo)
-
-### Deploy!
-
-You now have the deployment playbook and role. But before you run the playbook, you'll need to create an inventory file. If you're not familiar with Ansible, not to worry. A playbook runs a set of plays on a list of hosts, and the inventory file holds the list of hosts. In this case we want to execute the plays on our local workstation, which we can refer to as *localhost*, and so we'll create an inventory file containing a single host named *localhost*. Run the following to create the inventory file:
-
-```
-# Set the working directory to demo/ansible
-$ cd ansible
-
-# Create an inventory file
-$ echo "localhost">inventory
-```
-Now from inside the *demo/ansible* directory, run the following to launch the *Not Google Plus* site on your OpenShift instance:
-
-```
-# Run the playbook
-$ ansible-playbook -i inventory shipit-openshift.yml
-```
-Once the playbook completes, the application will be running on the cluster, and you can log into the console to take a look. To access the application, you'll need the hostname assigned to the route, and you can discover that by clicking on *Applications*, and choosing *Routes*. From there click on the hostname link, and the application will be opened in a new browser tab.
+Once the playbook completes, log into the OpenShift console to check the status of the deployment. From the *Applications* menu, choose *Routes*, and find the URL that points to the *nginx* service. Using this URL, you can access the appication running on the cluster.
 
 Watch the following video to see the full deployment:  
 
-[![Deploy the app](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/deploy.png)](https://youtu.be/9i6iGMLyr44)
+[![Deploy the app](https://raw.githubusercontent.com/ansible/ansible-container-demo/gh-pages/images/deploy.png)](https://youtu.be/40qbISem8Tc)

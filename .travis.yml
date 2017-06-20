@@ -1,6 +1,8 @@
 language: python
 dist: trusty
 sudo: required
+group: edge
+
 services:
 - docker
 before_install:

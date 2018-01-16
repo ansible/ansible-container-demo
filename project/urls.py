@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^api/v1/', include(accounts_router.urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url('^$', IndexView.as_view(), name='index'),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

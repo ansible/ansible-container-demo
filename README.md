@@ -1,3 +1,5 @@
+# Ansible Container Demo
+
 [![Build Status](https://travis-ci.org/ansible/ansible-container-demo.svg?branch=master)](https://travis-ci.org/ansible/ansible-container-demo)
 
 [Ansible Container](https://github.com/ansible/ansible-container) can manage the lifecycle of an application from development through cloud deployment. To demonstrate, we'll create, test and deploy a new social media application called *Not Google Plus*.
@@ -9,7 +11,7 @@ The application comes from a [tutorial](https://thinkster.io/django-angularjs-tu
 Before continuing, you'll need a couple of things:
 
  - A Linux or OSX environment  
- - Ansible Container installed from source. See our *[Running from source guide](http://docs.ansible.com/ansible-container/installation.html#running-from-source)* for assistance. Be sure to install *docker* engine support, and *openshift* engine support.  
+ - Surprise, surprise, you need to have Ansible Container installed. See our *[Installation guide](http://docs.ansible.com/ansible-container/installation.html#getting-ansible-container)* for assistance. Be sure to install *docker* engine support, and *openshift* engine support.  
  - Docker Engine or Docker for Mac. See [Docker Installation](https://docs.docker.com/engine/installation/) for assistance.
  - [Ansible 2.3+](http://docs.ansible.com/ansible/intro_installation.html)
 

@@ -183,13 +183,13 @@ $ cd demo
 $ ansible-container stop
 
 # Download and expand the source archive
-$ curl -L https://github.com/ansible/ansible-container-demo/archive/v0.1.0.tar.gz | tar -xzv
+$ curl -L https://github.com/ansible/ansible-container-demo/archive/0.2.0.tar.gz | tar -xzv
 
 # Copy the frontend files
-$ cp -R ansible-container-demo-0.1.0/src/* src
+$ cp -R ansible-container-demo-0.2.0/src/* src
 
 # Copy the Django files
-$ cp -R ansible-container-demo-0.1.0/project/* project
+$ cp -R ansible-container-demo-0.2.0/project/* project
 
 # Restart the application
 $ ansible-container run

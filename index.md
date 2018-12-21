@@ -15,7 +15,7 @@ Before continuing, you'll need a couple of things:
 
 Ansible Container uses Ansible roles to build images, initialize projects, and add services to existing projects. You can find roles contributed and maintained by the community at [Ansible Galaxy](https://galaxy.ansible.com).
 
-Keep in mind, there are three different types of roles. There are standard roles that simply execute tasks, which we can use with Ansible Container to buid images. Container App roles can be used to initialize an Ansible Container project, and Container Enabled roles define a service that can be added to an existing project.  
+Keep in mind, there are three different types of roles. There are standard roles that simply execute tasks, which we can use with Ansible Container to build images. Container App roles can be used to initialize an Ansible Container project, and Container Enabled roles define a service that can be added to an existing project.  
 
 To initialize our project we'll use the Container App role, *[ansible.django-gulp-nginx](https://galaxy.ansible.com/ansible/django-gulp-nginx)*. We'll start by creating an empty project directory, setting the new directory as the working directory, and then running the `init` command to copy the full contents of the role into the directory. This particular role will give us a fully functioning Django framework. 
 
